@@ -8,8 +8,8 @@ Para la ejecución del proyecto se debe situar en la raiz del proyecto y ejecuta
 Todos los componentes deben ser desplegados en la red project-net
 
 ### Componente Kafka
-* La configuración de kafka no es una configuración para ambiente de productión y es la siguiente:
-    * Topic:data-topic
+* La configuración de kafka no es una configuración para ambiente de producción y es la siguiente:
+    * Topic: data-topic
     * Puerto: 9092
     * Particiones: 1
     * Factor de replicación: 1
