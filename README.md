@@ -14,7 +14,7 @@ Todos los componentes deben ser desplegados en la red project-net
     * Particiones: 1
     * Factor de replicación: 1
 * Validación de Servicios
-    * Validación de servicios 
+    * Validación de servicios Kafka y Zookeeper
         * Ejecutar el comando: docker ps (debe visualizar Kafka y Zookeeper).
     * Validación de topics (data-topic)
         * Ingresar a kafka con el comando: docker exec -it kafka bash
