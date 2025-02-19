@@ -14,14 +14,14 @@ Todos los componentes deben ser desplegados en la red project-net
     * Particiones: 1
     * Factor de replicación: 1
 * Validación de Servicios
-    * Validación de servicios
-        Ejecutar el comando: docker ps (debe visualizar Kafka y Zookeeper).
+    * Validación de servicios 
+        * Ejecutar el comando: docker ps (debe visualizar Kafka y Zookeeper).
     * Validación de topics (data-topic)
-        Ingresar a kafka con el comando: docker exec -it kafka bash
-        Ejecutar el comando: kafka-topics --list --bootstrap-server localhost:9092
+        * Ingresar a kafka con el comando: docker exec -it kafka bash
+        * Ejecutar el comando: kafka-topics --list --bootstrap-server localhost:9092
 * Pruebas
-    Abrir dos terminales para el counsume y el producer
-    Ingresar a kafka con el comando: docker exec -it kafka bash
+    * Abrir dos terminales para el counsume y el producer
+    * Ingresar a kafka con el comando: docker exec -it kafka bash
     * Producer: 
         * Ejecutar el comando: kafka-console-producer --broker-list localhost:9092 --topic data-topic 
         * Escribir algunos mensajes y presionar enter después de cada uno
