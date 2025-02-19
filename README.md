@@ -2,12 +2,12 @@
 Proyecto Final grupo 2
 
 ## Ejecución
-Para la ejecución del proyecto se debe ejecutar el archivo docker-compose.yml que se encuentra en la raiz del proyecto
+Para la ejecución del proyecto se debe situar en la raiz del proyecto y ejecutar el comando docker compose up -d.
 
 ## Componentes
 Todos los componentes deben ser desplegados en la red project-net
 
-### Kafka
+### Componente Kafka
 * La configuración de kafka no es una configuración para ambiente de productión y es la siguiente:
     * Topic:data-topic
     * Puerto: 9092
