@@ -1,6 +1,11 @@
 # proyectoFinal-g2
 Proyecto Final grupo 2
 
+## Arquitectura de Integración
+<p align="center">
+    <img src="Arquitectura.png" />
+</p>
+
 ## Ejecución
 Para la ejecución del proyecto se debe situar en la raiz del proyecto y ejecutar el comando docker compose up -d.
 
