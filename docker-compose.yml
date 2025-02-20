@@ -9,7 +9,7 @@ services:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
     networks:
-      - kafka-net
+      - integration-net
 
   kafka:
     image: confluentinc/cp-kafka:latest
@@ -25,7 +25,7 @@ services:
     depends_on:
       - zookeeper
     networks:
-      - kafka-net
+      - integration-net
     command: >
       bash -c "
       /etc/confluent/docker/run &
@@ -33,7 +33,106 @@ services:
       kafka-topics --create --if-not-exists --topic data-topic --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1 &&
       wait
       "
+  mysql:
+    image: mysql:8
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: bank_db
+    ports:
+      - "3306:3306"
+    networks:
+      - integration-net
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  postgres:
+    image: postgres:14
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: bank_db_pg
+    ports:
+      - "5432:5432"
+    networks:
+      - integration-net
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # Microservicio CDC (Debezium Connector)
+  # Se encarga de capturar cambios de MySQL
+  # y publicarlos en Kafka en un topic
+  debezium:
+    image: debezium/connect:latest
+    container_name: debezium
+    ports:
+      - "8083:8083"
+    environment:
+      BOOTSTRAP_SERVERS: kafka:9092
+      GROUP_ID: 1
+      CONFIG_STORAGE_TOPIC: debezium_configs
+      OFFSET_STORAGE_TOPIC: debezium_offsets
+      STATUS_STORAGE_TOPIC: debezium_statuses
+      # Plugin para MySQL
+      CONNECT_PLUGIN_PATH: /kafka/libs
+      # MySQL connector config:
+      DATABASE_SERVER_NAME: mysql
+    depends_on:
+      - kafka
+      - mysql
+    networks:
+      - integration-net
+
+  # Microservicios (cuentas, prestamos, tarjetas, pagos)
+  micro-cuentas:
+    build: ./services/micro-cuentas
+    container_name: micro-cuentas
+    ports:
+      - "3001:3001"
+    environment:
+      # Variables de entorno para conectarse a MySQL o Postgres, si aplica
+      DB_HOST: mysql
+      DB_USER: root
+      DB_PASS: root
+      # Kafka
+      KAFKA_BROKER: kafka:9092
+    depends_on:
+      - kafka
+      - mysql
+    networks:
+      - integration-net
+
+  micro-prestamos:
+    build: ./services/micro-prestamos
+    container_name: micro-prestamos
+    ports:
+      - "3002:3002"
+    depends_on:
+      - kafka
+      - postgres
+    networks:
+      - integration-net
+
+  # micro-tarjetas, micro-pagos, micro-auth, micro-firebase
+
+  # GraphQL Gateway
+  gateway-graphql:
+    build: ./services/gateway-graphql
+    container_name: gateway-graphql
+    ports:
+      - "4000:4000"
+    depends_on:
+      - micro-cuentas
+      - micro-prestamos
+      # mas servicios
+    networks:
+      - integration-net
 
 networks:
-  kafka-net:
+  integration-net:
     driver: bridge
+
+volumes:
+  mysql_data:
+  postgres_data:

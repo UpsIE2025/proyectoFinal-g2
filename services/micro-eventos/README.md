@@ -1,0 +1,1 @@
+TAMBIEN: publicar/consumir eventos en Kafka para la lógica de negocio.

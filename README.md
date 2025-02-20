@@ -6,6 +6,10 @@ Proyecto Final grupo 2
     <img src="Arquitectura.png" />
 </p>
 
+### Workflow
+
+Demostrar: el patrón de microservicios, mensajería (Kafka), orquestación GraphQL, un ejemplo de CDC (Postgres → Microservicio de Replica → MySQL), autenticación con Auth0 y clientes (mobile con React Native y SPA) que consumen el API Gateway.
+
 ## Ejecución
 Para la ejecución del proyecto se debe situar en la raiz del proyecto y ejecutar el comando docker compose up -d.
 
