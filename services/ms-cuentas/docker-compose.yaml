@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:14-alpine
+    container_name: postgres-cuentas
+    environment:
+      POSTGRES_DB: cuentasdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - integration-net
+
+  ms-cuentas:
+    build: .
+    container_name: ms-cuentas
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: cuentasdb
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+    ports:
+      - "8080:8080"
+      - "9090:9090"
+    depends_on:
+      - postgres
+    networks:
+      - integration-net
+
+networks:
+  integration-net:
+    driver: bridge
+
+volumes:
+  postgres_data:

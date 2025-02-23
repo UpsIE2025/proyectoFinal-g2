@@ -1,0 +1,32 @@
+
+# Crear consumo
+gRPC localhost:9090/ConsumoGrpcService/CrearConsumo
+{
+  "cuenta_id": "5c294788-f24d-4d21-b2eb-dbc1d35915a1",
+  "descripcion": "Compra en supermercado",
+  "monto": 150.00
+}
+response:
+{
+	"id": "06ed66ec-b184-4419-bed7-5966f849a409",
+	"cuenta_id": "5c294788-f24d-4d21-b2eb-dbc1d35915a1",
+	"descripcion": "Compra en supermercado",
+	"monto": 150,
+	"estado": "PENDIENTE",
+	"fecha_consumo": "2025-02-23T01:56:08.793782041"
+}
+
+# Obtener consumo
+gRPC localhost:9090/ConsumoGrpcService/ObtenerConsumo
+{
+  "id": "06ed66ec-b184-4419-bed7-5966f849a409"
+}
+
+# Listar consumos
+gRPC localhost:9090/ConsumoGrpcService/ListarConsumos
+{
+  "cuenta_id": "5c294788-f24d-4d21-b2eb-dbc1d35915a1"
+}
+
+
+
