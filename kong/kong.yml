@@ -7,4 +7,3 @@ services:
         paths:
           - /graphql
 
-# (onfigurar plugins de JWT, etc. en esta parte)
