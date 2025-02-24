@@ -5,7 +5,7 @@ import { Consumo } from "./entity/Consumo";
 export const AppDataSource = new DataSource({
     type: "mariadb",
     host: 'mariadb',
-    port: 3306,
+    port: 3307,
     username: 'user',
     password: 'password',
     database: 'cdc_db',

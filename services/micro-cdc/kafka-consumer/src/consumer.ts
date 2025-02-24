@@ -73,9 +73,9 @@ async function run() {
       const value: DebeziumMessage<any> = JSON.parse(message.value.toString());
 
       // Determinar qué método llamar según el tópico
-      if (topic === "cuentasdb.public.cuenta") {
+      if (topic === "ms-cuentas-replica-cuenta") {
         await processCuentaMessage(value);
-      } else if (topic === "cuentasdb.public.consumo") {
+      } else if (topic === "ms-cuentas-replica-consumo") {
         await processConsumoMessage(value);
       }
     },
