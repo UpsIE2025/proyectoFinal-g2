@@ -1,0 +1,16 @@
+FROM node:18
+
+# Cambia el WORKDIR a /kafka-consumer
+WORKDIR /kafka-consumer
+
+# Copiar los archivos de configuración
+COPY package.json tsconfig.json ./
+
+# Copiar el código fuente
+COPY src ./src
+
+# Instalar dependencias
+RUN npm install
+
+# Comando para ejecutar la aplicación
+CMD ["npm", "start"]

@@ -1,4 +1,4 @@
-version: '3.7'
+version: "3.7"
 
 services:
   zookeeper:
@@ -21,7 +21,7 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     depends_on:
       - zookeeper
@@ -32,10 +32,11 @@ services:
       /etc/confluent/docker/run &
       sleep 10 &&
       kafka-topics --create --if-not-exists --topic solicitar-estado-cuenta --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1 &&
-      kafka-topics --create --if-not-exists --topic ms-cuentas-replica --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1 &&
+      kafka-topics --create --if-not-exists --topic cuentasdb.public.cuentas --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1 &&
+      kafka-topics --create --if-not-exists --topic cuentasdb.public.consumos --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1 &&
       wait
       "
-  
+
   # postgres:
   postgres:
     image: postgres:14-alpine
@@ -51,10 +52,10 @@ services:
     networks:
       - integration-net
 
-  ms-cuentas:    
-    build: 
-        context: ./services/ms-cuentas
-        dockerfile: Dockerfile
+  ms-cuentas:
+    build:
+      context: ./services/ms-cuentas
+      dockerfile: Dockerfile
     container_name: ms-cuentas
     environment:
       DB_HOST: postgres
@@ -68,56 +69,96 @@ services:
     depends_on:
       - postgres
     networks:
-      - integration-net  
-    
-  # Será habilitado por el responsable de la replica de información en tiempo real
-  # mysql:
-  #   image: mysql:8
-  #   container_name: mysql
-  #   environment:
-  #     MYSQL_ROOT_PASSWORD: root
-  #     MYSQL_DATABASE: bank_db
+      - integration-net
+  mariadb:
+    container_name: mariadb
+    image: mariadb:10.5
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: cuentasdb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "3305:3306"
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    networks:
+      - integration-net
+
+  kafka-consumer:
+    container_name: kafka-consumer
+    build:
+      context: ./services/micro-cdc/kafka-consumer
+      dockerfile: Dockerfile
+    depends_on:
+      - kafka
+      - mariadb
+    environment:
+      KAFKA_BROKER: kafka:9092
+      MARIADB_HOST: mariadb
+      MARIADB_USER: user
+      MARIADB_PASSWORD: password
+      MARIADB_DATABASE: cuentasdb
+    volumes:
+      - ./kafka-consumer:/app
+    networks:
+      - integration-net
+
+  # GraphQL Gateway
+  # gateway-graphql:
+  #   build: ./services/gateway-graphql
+  #   container_name: gateway-graphql
   #   ports:
-  #     - "3306:3306"
+  #     - "4000:4000"
+  #   depends_on:
+  #     - ms-cuentas
+  #     - micro-estado-cuenta
+  #     # mas servicios
   #   networks:
   #     - integration-net
-  #   volumes:
-  #     - mysql_data:/var/lib/mysql
 
-  # Será habilitado por el responsable de la replica de información en tiempo real
-  # Se encarga de capturar cambios en la base de datos del microservicio ms-cuentas
-  # y publicarlos en el tópico ms-cuentas-replica en Kafka 
-  # debezium:
-  #   image: debezium/connect:latest
-  #   container_name: debezium
+  debezium:
+    image: debezium/connect:1.7
+    depends_on:
+      - kafka
+      #- postgres
+    environment:
+      BOOTSTRAP_SERVERS: kafka:9092
+      GROUP_ID: 1
+      CONFIG_STORAGE_TOPIC: my_connect_configs
+      OFFSET_STORAGE_TOPIC: my_connect_offsets
+      STATUS_STORAGE_TOPIC: my_connect_statuses
+    ports:
+      - "8083:8083"
+    volumes:
+      - ./debezium-connector:/debezium-connector
+    networks:
+      - integration-net
+
+  # GraphQL Gateway
+  # gateway-graphql:
+  #   build: ./services/gateway-graphql
+  #   container_name: gateway-graphql
   #   ports:
-  #     - "8083:8083"
-  #   environment:
-  #     BOOTSTRAP_SERVERS: kafka:9092
-  #     GROUP_ID: 1
-  #     CONFIG_STORAGE_TOPIC: debezium_configs
-  #     OFFSET_STORAGE_TOPIC: debezium_offsets
-  #     STATUS_STORAGE_TOPIC: debezium_statuses
-  #     # Plugin para MySQL
-  #     CONNECT_PLUGIN_PATH: /kafka/libs
-  #     # MySQL connector config:
-  #     DATABASE_SERVER_NAME: postgres
+  #     - "4000:4000"
   #   depends_on:
-  #     - kafka      
+  #     - ms-cuentas
+  #     - micro-estado-cuenta
+  #     # mas servicios
   #   networks:
   #     - integration-net 
 
-  micro-estado-cuenta:    
-    build: 
-        context: ./services/micro-estado-cuenta
-        dockerfile: Dockerfile
-    container_name: micro-estado-cuenta    
-    ports:
-      - "26061:26061"      
-    depends_on:
-      - kafka
-    networks:
-      - integration-net  
+  # micro-estado-cuenta:
+  #   build:
+  #       context: ./services/micro-estado-cuenta
+  #       dockerfile: Dockerfile
+  #   container_name: micro-estado-cuenta
+  #   ports:
+  #     - "26061:26061"
+  #   depends_on:
+  #     - kafka
+  #   networks:
+  #     - integration-net
 
   micro-estado-cuenta-notificacion:    
     build: 
@@ -174,3 +215,4 @@ networks:
 volumes:
   #mysql_data:
   postgres_data:
+  mariadb-data:
