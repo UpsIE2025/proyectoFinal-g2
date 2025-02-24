@@ -87,6 +87,7 @@ services:
   # Se encarga de capturar cambios en la base de datos del microservicio ms-cuentas
   # y publicarlos en el tópico ms-cuentas-replica en Kafka
 
+
   kafka-consumer:
     build: 
       context: ./services/micro-cdc/kafka-consumer
@@ -117,6 +118,20 @@ services:
       - mariadb-data:/var/lib/mysql
     networks:
       - integration-net
+
+  # GraphQL Gateway
+  # gateway-graphql:
+  #   build: ./services/gateway-graphql
+  #   container_name: gateway-graphql
+  #   ports:
+  #     - "4000:4000"
+  #   depends_on:
+  #     - ms-cuentas
+  #     - micro-estado-cuenta
+  #     # mas servicios
+  #   networks:
+  #     - integration-net
+
 
   debezium:
     image: debezium/connect:1.7

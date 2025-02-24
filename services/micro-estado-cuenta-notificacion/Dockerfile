@@ -13,8 +13,5 @@ RUN npm install --omit=dev
 # Copia el resto del código fuente
 COPY . .
 
-# Expone el puerto donde corre el Publisher
-EXPOSE 26061
-
 # Comando para ejecutar el servicio
 CMD ["node", "notificar-estado-cuenta.js"]
