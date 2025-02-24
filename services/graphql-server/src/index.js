@@ -4,7 +4,7 @@ const fetch = require('node-fetch');
 const typeDefs = gql`
   type EstadoDeCuenta {
     id: ID!
-    balamce: Float
+    balance: Float
     ultimoMovimiento: String
   }
 
@@ -34,7 +34,7 @@ const resolvers = {
       // Llamada REST a micro-estado-cuenta
       const res = await fetch(`http://micro-estado-cuenta:26061/v1/estado-cuenta/:${id}`, {
         headers: {
-          Authorization: context.authHeader, // o el token en si
+          Authorization: context.authHeader,
         }
       });
       return res.json();
@@ -42,7 +42,7 @@ const resolvers = {
     cuenta: async(_, { id }, context) => {
       // Llamada gRPC a ms-cuentas
       const { getCuenta } = require('./grpcClient');
-      return getCuenta(id);
+      return await getCuenta(id); 
     }
   },
 
@@ -50,7 +50,7 @@ const resolvers = {
     crearCuenta: async (_, { nombre, saldo }) => {
       // Llamada gRPC a ms-cuentas
       const { crearCuenta } = require('./grpcClient');
-      return crearCuenta(nombre, saldo);  
+      return await crearCuenta(nombre, saldo);
     },
   },
 };
