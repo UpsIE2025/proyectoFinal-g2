@@ -1,0 +1,9 @@
+_format_version: "2.1"
+services:
+  - name: graphql-service
+    url: http://graphql-server:4000
+    routes:
+      - name: graphql-route
+        paths:
+          - /graphql
+

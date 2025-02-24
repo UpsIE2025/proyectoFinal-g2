@@ -2,10 +2,21 @@ const { ApolloServer, gql } = require('apollo-server');
 const fetch = require('node-fetch');
 
 const typeDefs = gql`
+  type EstadoDeCuenta {
+    id: ID!
+    balance: Float
+    ultimoMovimiento: String
+  }
+
   type Cuenta {
     id: ID!
-    nombre: String
-    saldo: Float
+    titular: String
+    numero: String
+  }
+
+  type Query {
+    estadoDeCuenta(id: ID!): EstadoDeCuenta
+    cuenta(id: ID!): Cuenta
   }
 
   type Query {
@@ -19,32 +30,56 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    obtenerCuentas: async () => {
-      const res = await fetch('http://micro-cuentas:3001/cuentas');
-      return res.json();
-    },
-  },
-  Mutation: {
-    crearCuenta: async (_, { nombre, saldo }) => {
-      const res = await fetch('http://micro-cuentas:3001/cuentas', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nombre, saldo }),
+    estadoDeCuenta: async (_, { id }, context) => {
+      // Llamada REST a micro-estado-cuenta
+      const res = await fetch(`http://micro-estado-cuenta:26061/v1/estado-cuenta/:${id}`, {
+        headers: {
+          Authorization: context.authHeader,
+        }
       });
       return res.json();
+    },
+    cuenta: async(_, { id }, context) => {
+      // Llamada gRPC a ms-cuentas
+      const { getCuenta } = require('./grpcClient');
+      return await getCuenta(id); 
+    }
+  },
+
+  Mutation: {
+    crearCuenta: async (_, { nombre, saldo }) => {
+      // Llamada gRPC a ms-cuentas
+      const { crearCuenta } = require('./grpcClient');
+      return await crearCuenta(nombre, saldo);
     },
   },
 };
 
+async function validateToken(authHeader) {
+  // Llama al micro-auth para validar token.
+  // Se podria enviar el token y esperar respuesta ("OK" / usuario decodificado).
+  const response = await fetch('http:micro-auth:3000/validate', {
+    headers: { Authorization: authHeader }
+  });
+  if (!response.ok) {
+    throw new Error('Token inválido');
+  }
+  return response.json(); // Devuelve el usuario decodificado
+}
+
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: ({ req }) => {
-    // validar JWT con Auth0
-    const token = req.headers.authorization || '';
-    // Validar token...
-    return { user: /* datos del token */ };
-  },
+  context: async ({ req }) => {
+    // validar JWT con Auth0 ó micro-auth
+    const authHeader = req.headers.authorization || '';
+    // logica de validacion
+    const user = await validateToken(authHeader);
+    return { 
+      user,
+      authHeader
+    };
+  }
 });
 
 server.listen({ port: 4000 }).then(({ url }) => {
