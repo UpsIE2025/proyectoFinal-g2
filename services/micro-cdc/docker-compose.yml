@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  
+
+  mariadb:
+    image: mariadb:10.5
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: cdc_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "3305:3306"
+    volumes:
+      - mariadb-data:/var/lib/mysql
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:6.2.0
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: confluentinc/cp-kafka:6.2.0
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    ports:
+      - "9092:9092"
+
+  connect:
+    image: debezium/connect:1.7
+    depends_on:
+      - kafka
+      #- postgres
+    environment:
+      BOOTSTRAP_SERVERS: kafka:9092
+      GROUP_ID: 1
+      CONFIG_STORAGE_TOPIC: my_connect_configs
+      OFFSET_STORAGE_TOPIC: my_connect_offsets
+      STATUS_STORAGE_TOPIC: my_connect_statuses
+    ports:
+      - "8083:8083"
+    volumes:
+      - ./debezium-connector:/debezium-connector
+
+  kafka-consumer:
+    build: 
+      context: ./kafka-consumer
+      dockerfile: DockerFile 
+    depends_on:
+      - kafka
+      - mariadb
+    environment:
+      KAFKA_BROKER: kafka:9092
+      MARIADB_HOST: mariadb
+      MARIADB_USER: user
+      MARIADB_PASSWORD: password
+      MARIADB_DATABASE: cdc_db
+    volumes:
+      - ./kafka-consumer:/app
+
+volumes:
+  mariadb-data:
