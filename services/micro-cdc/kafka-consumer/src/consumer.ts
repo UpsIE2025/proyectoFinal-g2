@@ -1,15 +1,17 @@
-import { Kafka, Consumer } from "kafkajs";
+import { Kafka } from "kafkajs";
 import { AppDataSource } from "./data-source";
 import { Cuenta } from "./entity/Cuenta";
 import { Consumo } from "./entity/Consumo";
 import "reflect-metadata";
 
+// Interfaz para el mensaje Debezium
 interface DebeziumMessage<T> {
   op: "c" | "u" | "d"; // Operación: create, update, delete
   after: T; // Datos después de la operación
   before: T; // Datos antes de la operación (solo para delete)
 }
 
+// Configuración de Kafka
 const kafka = new Kafka({
   clientId: "kafka-consumer",
   brokers: [process.env.KAFKA_BROKER || "kafka:9092"],
@@ -23,14 +25,19 @@ async function processCuentaMessage(value: DebeziumMessage<Cuenta>) {
 
   if (value.op === "c" || value.op === "u") {
     const entityData = repository.create({
-      ...value.after,
-      fechaCreacion: new Date(value.after.fechaCreacion), // Convertir fechas
+      id: value.after.id,
+      estado: value.after.estado,
+      fechaCreacion:value.after.fechaCreacion , // Convertir microsegundos a milisegundos
+      saldo: value.after.saldo,
+      usuarioId: value.after.usuarioId, // Mapear "usuario_id" a "usuarioId"
     });
+    console.log("Guardando cuenta:", entityData);
     await repository.save(entityData);
-    console.log("Cuenta guardada/actualizada:", entityData);
+    console.log("Cuenta guardada correctamente.");
   } else if (value.op === "d") {
+    console.log("Eliminando cuenta:", value.before.id);
     await repository.delete(value.before.id);
-    console.log("Cuenta eliminada:", value.before.id);
+    console.log("Cuenta eliminada correctamente.");
   }
 }
 
@@ -40,46 +47,101 @@ async function processConsumoMessage(value: DebeziumMessage<Consumo>) {
 
   if (value.op === "c" || value.op === "u") {
     const entityData = repository.create({
-      ...value.after,
-      fechaConsumo: new Date(value.after.fechaConsumo), // Convertir fechas
+      id: value.after.id,
+      descripcion: value.after.descripcion,
+      monto: value.after.monto,
+      fechaConsumo: new Date(Number(value.after.fechaConsumo) / 1000), // Convertir microsegundos a milisegundos
+      estado: value.after.estado,
+      cuentaId: value.after.cuentaId, // Mapear "cuenta_id" a "cuentaId"
     });
+    console.log("Guardando consumo:", entityData);
     await repository.save(entityData);
-    console.log("Consumo guardado/actualizado:", entityData);
+    console.log("Consumo guardado correctamente.");
   } else if (value.op === "d") {
+    console.log("Eliminando consumo:", value.before.id);
     await repository.delete(value.before.id);
-    console.log("Consumo eliminado:", value.before.id);
+    console.log("Consumo eliminado correctamente.");
   }
 }
 
 // Función principal para ejecutar el consumer
 async function run() {
-  await AppDataSource.initialize();
-  await consumer.connect();
-  await consumer.subscribe({
-    topic: "cuentasdb.public.cuentas",
-    fromBeginning: true,
-  });
-  await consumer.subscribe({
-    topic: "cuentasdb.public.consumos",
-    fromBeginning: true,
-  });
+  try {
+    // Inicializar la conexión a MySQL
+    await AppDataSource.initialize();
+    console.log("Conexión a MySQL establecida correctamente.");
 
-  await consumer.run({
-    eachMessage: async ({ topic, partition, message }) => {
-      if (!message.value) {
-        console.error("Received message with null value");
-        return;
-      }
-      const value: DebeziumMessage<any> = JSON.parse(message.value.toString());
+    // Conectar al consumer de Kafka
+    await consumer.connect();
+    console.log("Consumer conectado a Kafka.");
 
-      // Determinar qué método llamar según el tópico
-      if (topic === "cuentasdb.public.cuentas") {
-        await processCuentaMessage(value);
-      } else if (topic === "cuentasdb.public.consumos") {
-        await processConsumoMessage(value);
-      }
-    },
-  });
+    // Suscribirse a los tópicos
+    await consumer.subscribe({
+      topic: "cuentasdb.public.cuentas",
+      fromBeginning: true,
+    });
+    await consumer.subscribe({
+      topic: "cuentasdb.public.consumos",
+      fromBeginning: true,
+    });
+    console.log("Consumer suscrito a los tópicos.");
+
+    // Procesar mensajes
+    await consumer.run({
+      eachMessage: async ({ topic, partition, message }) => {
+        if (!message.value) {
+          console.error("Received message with null value");
+          return;
+        }
+
+        console.log("Mensaje recibido:", {
+          topic,
+          partition,
+          offset: message.offset,
+          value: message.value.toString(),
+        });
+
+        try {
+          // Parsea el mensaje
+          const messageValue = JSON.parse(message.value.toString());
+
+          // Extrae el campo "payload"
+          const payload = messageValue.payload;
+
+          // Verifica si el payload existe
+          if (!payload) {
+            console.error("Payload is undefined");
+            return;
+          }
+
+          // Extrae los campos del payload
+          const value: DebeziumMessage<any> = {
+            op: payload.op,
+            after: payload.after,
+            before: payload.before,
+          };
+
+          console.log("Datos procesados:", {
+            op: value.op,
+            after: value.after,
+            before: value.before,
+          });
+
+          // Procesa el mensaje según el tópico
+          if (topic === "cuentasdb.public.cuentas") {
+            await processCuentaMessage(value);
+          } else if (topic === "cuentasdb.public.consumos") {
+            await processConsumoMessage(value);
+          }
+        } catch (error) {
+          console.error("Error processing message:", error);
+        }
+      },
+    });
+  } catch (error) {
+    console.error("Error en el consumer:", error);
+  }
 }
 
+// Ejecutar el consumer
 run().catch(console.error);
