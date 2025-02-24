@@ -6,7 +6,7 @@ export class Cuenta {
     id!: string;
 
     @Column({ name: "usuario_id" })
-    usuarioId!: string;
+    usuario_id!: string;
 
     @Column()
     saldo!: number;
@@ -15,5 +15,5 @@ export class Cuenta {
     estado!: string;
 
     @Column({ name: "fecha_creacion" })
-    fechaCreacion!: Date;
+    fecha_creacion!: Date;
 }

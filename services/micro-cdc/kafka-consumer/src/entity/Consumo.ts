@@ -7,7 +7,7 @@ export class Consumo {
     id!: string;
 
     @Column({ name: "cuenta_id" })
-    cuentaId!: string;
+    cuenta_id!: string;
 
     @Column()
     descripcion!: string;
@@ -16,7 +16,7 @@ export class Consumo {
     monto!: number;
 
     @Column({ name: "fecha_consumo" })
-    fechaConsumo!: Date;
+    fecha_consumo!: Date;
 
     @Column()
     estado!: string;

@@ -27,9 +27,9 @@ async function processCuentaMessage(value: DebeziumMessage<Cuenta>) {
     const entityData = repository.create({
       id: value.after.id,
       estado: value.after.estado,
-      fechaCreacion:value.after.fechaCreacion , // Convertir microsegundos a milisegundos
+      fecha_creacion: new Date(Number(value.after.fecha_creacion) / 1000), // Convertir microsegundos a milisegundos
       saldo: value.after.saldo,
-      usuarioId: value.after.usuarioId, // Mapear "usuario_id" a "usuarioId"
+      usuario_id: value.after.usuario_id, // Mapear "usuario_id" a "usuarioId"
     });
     console.log("Guardando cuenta:", entityData);
     await repository.save(entityData);
@@ -50,9 +50,9 @@ async function processConsumoMessage(value: DebeziumMessage<Consumo>) {
       id: value.after.id,
       descripcion: value.after.descripcion,
       monto: value.after.monto,
-      fechaConsumo: new Date(Number(value.after.fechaConsumo) / 1000), // Convertir microsegundos a milisegundos
+      fecha_consumo: new Date(Number(value.after.fecha_consumo) / 1000), // Convertir microsegundos a milisegundos
       estado: value.after.estado,
-      cuentaId: value.after.cuentaId, // Mapear "cuenta_id" a "cuentaId"
+      cuenta_id: value.after.cuenta_id, // Mapear "cuenta_id" a "cuentaId"
     });
     console.log("Guardando consumo:", entityData);
     await repository.save(entityData);
