@@ -3,7 +3,6 @@ ALTER SYSTEM SET max_wal_senders = 10;
 ALTER SYSTEM SET max_replication_slots = 10;
 ALTER ROLE postgres WITH REPLICATION;
 GRANT ALL PRIVILEGES ON DATABASE cuentasdb TO postgres;
-
 CREATE PUBLICATION dbz_publication FOR ALL TABLES;
 
 
@@ -14,3 +13,6 @@ CREATE PUBLICATION dbz_publication FOR ALL TABLES;
 
 
 curl -H "Accept:application/json" localhost:8083/connectors/
+
+ curl -s http://localhost:8083/connectors/postgres-connector/status
+INSERT INTO cuentas (id, estado, fecha_creacion, saldo, usuario_id) VALUES (1, 'activo', '2025-02-23', 1000.50, 123);

@@ -5,10 +5,10 @@ import { Consumo } from "./entity/Consumo";
 export const AppDataSource = new DataSource({
     type: "mariadb",
     host: 'mariadb',
-    port: 3307,
+    port: 3306,
     username: 'user',
     password: 'password',
-    database: 'cdc_db',
+    database: 'cuentasdb',
     synchronize: true,
     logging: true,
     entities: [Cuenta, Consumo],

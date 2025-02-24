@@ -31,8 +31,8 @@ services:
       /etc/confluent/docker/run &
       sleep 10 &&
       kafka-topics --create --if-not-exists --topic solicitar-estado-cuenta --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1 &&
-      kafka-topics --create --if-not-exists --topic ms-cuentas-replica-consumo --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1 &&
-      kafka-topics --create --if-not-exists --topic ms-cuentas-replica-cuenta --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1 &&
+      kafka-topics --create --if-not-exists --topic cuentasdb.public.cuentas --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1 &&
+      kafka-topics --create --if-not-exists --topic cuentasdb.public.consumos --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1 &&
       wait
       "
 
@@ -74,17 +74,18 @@ services:
     image: mariadb:10.5
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: cdc_db
+      MYSQL_DATABASE: cuentasdb
       MYSQL_USER: user
       MYSQL_PASSWORD: password
     ports:
-      - "3307:3307"
+      - "3305:3306"
     volumes:
       - mariadb-data:/var/lib/mysql
     networks:
       - integration-net
 
   kafka-consumer:
+    container_name: kafka-consumer
     build:
       context: ./services/micro-cdc/kafka-consumer
       dockerfile: Dockerfile
@@ -96,11 +97,11 @@ services:
       MARIADB_HOST: mariadb
       MARIADB_USER: user
       MARIADB_PASSWORD: password
-      MARIADB_DATABASE: cdc_db
+      MARIADB_DATABASE: cuentasdb
     volumes:
       - ./kafka-consumer:/app
-
-  
+    networks:
+      - integration-net
 
   # GraphQL Gateway
   # gateway-graphql:

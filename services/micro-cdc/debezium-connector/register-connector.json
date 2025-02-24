@@ -2,14 +2,14 @@
     "name": "postgres-connector",
     "config": {
       "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
-      "tasks.max": "1",
-      "database.hostname": "postgres",
+    
+      "database.hostname": "postgres-cuentas",
       "database.port": "5432",
       "database.user": "postgres",
       "database.password": "postgres",
       "database.dbname": "cuentasdb",
       "database.server.name": "cuentasdb",
-      "table.include.list": "public.cuenta,public.consumo",
+      "table.include.list": "public.cuentas,public.consumos",
       "plugin.name": "pgoutput",
       "slot.name": "debezium",
       "publication.name": "dbz_publication",

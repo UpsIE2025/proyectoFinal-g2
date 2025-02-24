@@ -1,7 +1,7 @@
 // Consumo.ts
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 
-@Entity()
+@Entity("consumos")
 export class Consumo {
     @PrimaryGeneratedColumn("uuid")
     id!: string;

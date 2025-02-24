@@ -56,11 +56,11 @@ async function run() {
   await AppDataSource.initialize();
   await consumer.connect();
   await consumer.subscribe({
-    topic: "cuentasdb.public.cuenta",
+    topic: "cuentasdb.public.cuentas",
     fromBeginning: true,
   });
   await consumer.subscribe({
-    topic: "cuentasdb.public.consumo",
+    topic: "cuentasdb.public.consumos",
     fromBeginning: true,
   });
 
@@ -73,9 +73,9 @@ async function run() {
       const value: DebeziumMessage<any> = JSON.parse(message.value.toString());
 
       // Determinar qué método llamar según el tópico
-      if (topic === "ms-cuentas-replica-cuenta") {
+      if (topic === "cuentasdb.public.cuentas") {
         await processCuentaMessage(value);
-      } else if (topic === "ms-cuentas-replica-consumo") {
+      } else if (topic === "cuentasdb.public.consumos") {
         await processConsumoMessage(value);
       }
     },
