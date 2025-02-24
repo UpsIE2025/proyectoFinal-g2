@@ -2,11 +2,11 @@ const { Kafka } = require('kafkajs');
 
 const kafka = new Kafka({
   clientId: 'message-system',
-  brokers: ['localhost:9092']
+  brokers: ['kafka:9092']
 });
 
 const TOPIC_SOLICITAR_ESTADO_CUENTA = 'solicitar-estado-cuenta';
-const consumer = kafka.consumer({ groupId: 'message-group-estado-cuenta' });
+const consumer = kafka.consumer({ groupId: 'message-group-cuenta' });
 
 async function processMessages() {
   await consumer.connect();

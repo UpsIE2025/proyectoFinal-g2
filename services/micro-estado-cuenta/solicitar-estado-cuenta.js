@@ -6,7 +6,7 @@ app.use(express.json());
 
 const kafka = new Kafka({
   clientId: 'message-system',
-  brokers: ['localhost:9092'] 
+  brokers: ['kafka:9092'] 
 });
 
 const producer = kafka.producer();
@@ -24,10 +24,10 @@ async function sendMessage(topic, message) {
 // Enviar el mensaje con la siguiente estructura { content: message, response: gj-reply1 }
 app.get("/v1/estado-cuenta/:cuenta", async (req, res) => {  
   const { cuenta } = req.params;
-  console.log(`solicitar-estado-cuenta::get - Solicitud recibidad para el numero de cuenta: ${req.params}`)
+  console.log(`solicitar-estado-cuenta::get - Solicitud recibidad para el numero de cuenta: ${JSON.stringify(req.params)}`)
   try {        
     await sendMessage(TOPIC_SOLICITAR_ESTADO_CUENTA, {cuenta});     
-    console.log(`solicitar-estado-cuenta::get - Solicitud publicada para el numero de cuenta: ${req.params}`)
+    console.log(`solicitar-estado-cuenta::get - Solicitud publicada para el numero de cuenta: ${JSON.stringify(req.params)}`)
     res.status(200).json({ success: true, message: `Solicitud de Estado de Cuenta[${cuenta}] realizada con éxito` });
   } catch (error) {
     console.error(`solicitar-estado-cuenta::get - Error al publicar la solicitud - Error: ${error.message}`)
