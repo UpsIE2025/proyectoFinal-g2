@@ -24,7 +24,7 @@ Open the `app.json` file and locate the following plugin configuration:
     [
         "react-native-auth0",
         {
-            "domain": "{yourDomain}"
+            "domain": "dev-88x6n0ntfccbwhfp.us.auth0.com"
 
         }
     ]

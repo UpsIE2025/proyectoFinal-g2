@@ -1,54 +1,53 @@
-import React from 'react';
-import {Alert, Button, StyleSheet, Text, View} from 'react-native';
-import {useAuth0, Auth0Provider} from 'react-native-auth0';
-import config from './auth0-configuration';
+import React, { useState } from 'react';
+import { Alert, Button, StyleSheet, Text, View } from 'react-native';
+import { logInAsync } from './auth';
+import * as WebBrowser from 'expo-web-browser';
 
-const Home = () => {
-  const {authorize, clearSession, user, error, getCredentials, isLoading} = useAuth0();
+WebBrowser.maybeCompleteAuthSession();
+
+const App = () => {
+  const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const onLogin = async () => {
+    setIsLoading(true);
     try {
-      await authorize();
-      let credentials = await getCredentials();
-      Alert.alert('AccessToken: ' + credentials.accessToken);
-    } catch (e) {
-      console.log(e);
+      const response = await logInAsync();
+      if (response) {
+        setUser(response);
+        Alert.alert('Success', 'Logged in successfully!');
+      }
+    } catch (error) {
+      console.error(error);
+      Alert.alert('Error', 'Something went wrong');
     }
+    setIsLoading(false);
   };
 
-  const loggedIn = user !== undefined && user !== null;
-
-  const onLogout = async () => {
-    try {
-      await clearSession();
-    } catch (e) {
-      console.log('Log out cancelled');
-    }
+  const onLogout = () => {
+    setUser(null);
   };
 
   if (isLoading) {
-    return <View style={styles.container}><Text>Loading</Text></View>;
+    return <View style={styles.container}><Text>Loading...</Text></View>;
   }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}> Auth0Sample - Login </Text>
-      {user && <Text>You are logged in as {user.name}</Text>}
-      {!user && <Text>You are not logged in</Text>}
-      {error && <Text>{error.message}</Text>}
-      <Button
-        onPress={loggedIn ? onLogout : onLogin}
-        title={loggedIn ? 'Log Out' : 'Log In'}
-      />
+      <Text style={styles.header}>Auth0Sample - Login</Text>
+      {user ? (
+        <>
+          <Text>You are logged in!</Text>
+          <Text>Access Token: {user.access_token}</Text>
+          <Button title="Log Out" onPress={onLogout} />
+        </>
+      ) : (
+        <>
+          <Text>You are not logged in</Text>
+          <Button title="Log In" onPress={onLogin} />
+        </>
+      )}
     </View>
-  );
-};
-
-const App = () => {
-  return (
-    <Auth0Provider domain={config.domain} clientId={config.clientId}>
-      <Home />
-    </Auth0Provider>
   );
 };
 
@@ -58,6 +57,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
+    padding: 20,
   },
   header: {
     fontSize: 20,
