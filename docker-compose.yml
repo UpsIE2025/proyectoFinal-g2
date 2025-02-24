@@ -108,17 +108,17 @@ services:
   
 
   # GraphQL Gateway
-  gateway-graphql:
-    build: ./services/gateway-graphql
-    container_name: gateway-graphql
-    ports:
-      - "4000:4000"
-    depends_on:
-      - ms-cuentas
-      - micro-estado-cuenta
-      # mas servicios
-    networks:
-      - integration-net
+  # gateway-graphql:
+  #   build: ./services/gateway-graphql
+  #   container_name: gateway-graphql
+  #   ports:
+  #     - "4000:4000"
+  #   depends_on:
+  #     - ms-cuentas
+  #     - micro-estado-cuenta
+  #     # mas servicios
+  #   networks:
+  #     - integration-net
 
   micro-estado-cuenta:    
     build: 

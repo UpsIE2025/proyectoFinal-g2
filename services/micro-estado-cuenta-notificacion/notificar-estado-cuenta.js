@@ -6,7 +6,7 @@ const kafka = new Kafka({
 });
 
 const TOPIC_SOLICITAR_ESTADO_CUENTA = 'solicitar-estado-cuenta';
-const consumer = kafka.consumer({ groupId: 'message-group-estado-cuenta' });
+const consumer = kafka.consumer({ groupId: 'message-group-cuenta' });
 
 async function processMessages() {
   await consumer.connect();

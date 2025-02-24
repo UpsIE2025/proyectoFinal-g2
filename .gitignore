@@ -1,0 +1,3 @@
+.vscode/settings.json
+services/micro-estado-cuenta/node_modules/
+services/micro-estado-cuenta-notificacion/node_modules/
