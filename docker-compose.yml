@@ -70,6 +70,7 @@ services:
       - postgres
     networks:
       - integration-net
+
   mariadb:
     container_name: mariadb
     image: mariadb:10.5
@@ -86,10 +87,11 @@ services:
       - integration-net
 
   kafka-consumer:
+    restart: always
     container_name: kafka-consumer
     build:
       context: ./services/micro-cdc/kafka-consumer
-      dockerfile: Dockerfile
+      dockerfile: DockerFile
     depends_on:
       - kafka
       - mariadb
@@ -104,21 +106,9 @@ services:
     networks:
       - integration-net
 
-  # GraphQL Gateway
-  # gateway-graphql:
-  #   build: ./services/gateway-graphql
-  #   container_name: gateway-graphql
-  #   ports:
-  #     - "4000:4000"
-  #   depends_on:
-  #     - ms-cuentas
-  #     - micro-estado-cuenta
-  #     # mas servicios
-  #   networks:
-  #     - integration-net
-
   debezium:
     image: debezium/connect:1.7
+    restart: always
     depends_on:
       - kafka
       #- postgres
@@ -135,30 +125,17 @@ services:
     networks:
       - integration-net
 
-  # GraphQL Gateway
-  # gateway-graphql:
-  #   build: ./services/gateway-graphql
-  #   container_name: gateway-graphql
-  #   ports:
-  #     - "4000:4000"
-  #   depends_on:
-  #     - ms-cuentas
-  #     - micro-estado-cuenta
-  #     # mas servicios
-  #   networks:
-  #     - integration-net 
-
-  # micro-estado-cuenta:
-  #   build:
-  #       context: ./services/micro-estado-cuenta
-  #       dockerfile: Dockerfile
-  #   container_name: micro-estado-cuenta
-  #   ports:
-  #     - "26061:26061"
-  #   depends_on:
-  #     - kafka
-  #   networks:
-  #     - integration-net
+  micro-estado-cuenta:
+    build:
+        context: ./services/micro-estado-cuenta
+        dockerfile: Dockerfile
+    container_name: micro-estado-cuenta
+    ports:
+      - "26061:26061"
+    depends_on:
+      - kafka
+    networks:
+      - integration-net
 
   micro-estado-cuenta-notificacion:    
     build: 
@@ -168,6 +145,8 @@ services:
     restart: always
     depends_on:
       - kafka
+    networks:
+      - integration-net
 
   # # KONG API GATEWAY
   # kong:
@@ -213,6 +192,5 @@ networks:
     driver: bridge
 
 volumes:
-  #mysql_data:
   postgres_data:
   mariadb-data:

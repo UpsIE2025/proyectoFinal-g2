@@ -4,7 +4,7 @@ WORKDIR /app
 RUN apk add --no-cache bash
 COPY . .
 RUN chmod +x mvnw
-RUN ./mvnw package -DskipTests
+# RUN ./mvnw package -DskipTests
 
 FROM eclipse-temurin:21.0.3_9-jdk-alpine
 WORKDIR /app
