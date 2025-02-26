@@ -1,0 +1,25 @@
+{
+    "name": "graphql-server",
+    "version": "1.0.0",
+    "description": "GraphQL Server with Apollo, JWT authentication, REST and gRPC integration",
+    "main": "src/index.js",
+    "scripts": {
+        "start": "node src/index.js",
+        "dev": "nodemon src/index.js"
+    },
+    "dependencies": {
+        "@grpc/grpc-js": "^1.8.0",
+        "@grpc/proto-loader": "^0.7.7",
+        "apollo-server-express": "^3.13.0",
+        "body-parser": "^1.20.2",
+        "cors": "^2.8.5",
+        "express": "^4.18.2",
+        "graphql": "^16.6.0",
+        "jsonwebtoken": "^9.0.0",
+        "jwks-rsa": "^3.0.1",
+        "node-fetch": "^2.7.0"
+    },
+    "devDependencies": {
+        "nodemon": "^3.0.1"
+    }
+}

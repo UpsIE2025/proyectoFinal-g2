@@ -35,3 +35,5 @@ ios/.symlinks/
 
 # TypeScript
 *.tsbuildinfo
+
+services/graphql-server/node_modules/

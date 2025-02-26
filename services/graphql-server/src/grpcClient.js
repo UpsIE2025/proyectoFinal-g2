@@ -1,8 +1,11 @@
 const grpc = require('@grpc/grpc-js');
 const protoLoader = require('@grpc/proto-loader');
+const path = require("path");
+
+const PROTO_PATH = path.join(__dirname, '/cuenta.proto');
 
 // Cargar el archivo .proto de Cuentas
-const packageDefinition = protoLoader.loadSync('../../ms-cuentas/src/main/proto' + '/cuenta.proto', {
+const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
   keepCase: true,
   longs: String,
   enums: String,
@@ -10,18 +13,23 @@ const packageDefinition = protoLoader.loadSync('../../ms-cuentas/src/main/proto'
   oneofs: true
 });
 
-const cuentasProto = grpc.loadPackageDefinition(packageDefinition).cuentas;
+const cuentasProto = grpc.loadPackageDefinition(packageDefinition).CuentaGrpcService;
 
 // Crear el cliente gRPC para conectarse al microservicio "Cuentas"
-const client = new cuentasProto.CuentasService(
-  'ms-cuentas:8080',
+let client;
+try {
+  client = new cuentasProto(
+  'ms-cuentas:9090',
   grpc.credentials.createInsecure() // No se usa seguridad
-);
+  );
+} catch (error) {
+  console.error('Error al crear el cliente gRPC:', error);
+}
 
 // Función para obtener una cuenta mediante gRPC
 function obtenerCuenta(id) {
   return new Promise((resolve, reject) => {
-    client.obtenerCuenta({ id }, (err, response) => {
+    client.ObtenerCuenta({ id }, (err, response) => {
       if (err) {
         reject(err);
       } else {
@@ -33,7 +41,7 @@ function obtenerCuenta(id) {
 
 function crearCuenta(usuario_id, saldo_inicial) {
   return new Promise((resolve, reject) => {
-    client.crearCuenta({ usuario_id, saldo_inicial }, (err, response) => {
+    client.CrearCuenta({ usuario_id, saldo_inicial }, (err, response) => {
       if (err) {
         reject(err);
       } else {
@@ -45,7 +53,7 @@ function crearCuenta(usuario_id, saldo_inicial) {
 
 function actualizarCuenta(id, saldo, estado) {
   return new Promise((resolve, reject) => {
-    client.actualizarCuenta({ id, saldo, estado }, (err, response) => {
+    client.ActualizarCuenta({ id, saldo, estado }, (err, response) => {
       if(err) {
         reject(err);
       } else {
@@ -57,7 +65,7 @@ function actualizarCuenta(id, saldo, estado) {
 
 function listarCuentas(id) {
   return new Promise((resolve, reject) => {
-    client.listarCuentas({ id }, (err, response) => {
+    client.ListarCuentas({ id }, (err, response) => {
       if(err) {
         reject(err);
       } else {
@@ -69,7 +77,7 @@ function listarCuentas(id) {
 
 function crearConsumo(cuenta_id, descripcion, monto) {
   return new Promise((resolve, reject) => {
-    client.crearConsumo({ cuenta_id, descripcion, monto }, (err, response) => {
+    client.CrearConsumo({ cuenta_id, descripcion, monto }, (err, response) => {
       if(err) {
         reject(err);
       } else {
@@ -81,7 +89,7 @@ function crearConsumo(cuenta_id, descripcion, monto) {
 
 function obtenerConsumo(id) {
   return new Promise((resolve, reject) => {
-    client.obtenerConsumo({ id }, (err, response) => {
+    client.ObtenerConsumo({ id }, (err, response) => {
       if(err) {
         reject(err);
       } else {
@@ -93,7 +101,7 @@ function obtenerConsumo(id) {
 
 function listarConsumos(cuenta_id) {
   return new Promise((resolve, reject) => {
-    client.listarConsumos({ cuenta_id }, (err, response) => {
+    client.ListarConsumos({ cuenta_id }, (err, response) => {
       if(err) {
         reject(err);
       } else {
