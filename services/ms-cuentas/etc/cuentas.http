@@ -1,5 +1,5 @@
 
-# Crear cuenta
+##### Crear cuenta
 gRPC localhost:9090/CuentaGrpcService/CrearCuenta
 {
   "usuario_id": "123",
@@ -14,7 +14,7 @@ response:
 	"fecha_creacion": "2025-02-23T01:39:01.706032701"
 }
 
-# Actualizar cuenta
+##### Actualizar cuenta
 gRPC localhost:9090/CuentaGrpcService/ActualizarCuenta
 {
   "id": "5c294788-f24d-4d21-b2eb-dbc1d35915a1",
@@ -22,13 +22,13 @@ gRPC localhost:9090/CuentaGrpcService/ActualizarCuenta
   "estado": "ACTIVA"
 }
 
-# Consultar cuenta
+##### Consultar cuenta
 gRPC localhost:9090/CuentaGrpcService/ConsultarCuenta
 {
   "id": "5c294788-f24d-4d21-b2eb-dbc1d35915a1"
 }
 
-# Listar cuentas por usuario
+##### Listar cuentas por usuario
 gRPC localhost:9090/CuentaGrpcService/ListarCuentas
 {
   "usuario_id": "123"
