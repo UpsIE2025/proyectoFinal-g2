@@ -4,8 +4,6 @@ const path = require("path");
 
 const PROTO_PATH = path.join(__dirname, '/cuenta.proto');
 
-console.log('PROTOOOOOOO',PROTO_PATH);
-
 // Cargar el archivo .proto de Cuentas
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
   keepCase: true,
@@ -16,11 +14,11 @@ const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
 });
 
 const cuentasProto = grpc.loadPackageDefinition(packageDefinition).CuentaGrpcService;
-console.log('PROTOOOOOOO1',cuentasProto);
-let client;
+
 // Crear el cliente gRPC para conectarse al microservicio "Cuentas"
+let client;
 try {
-  client = cuentasProto.CuentaGrpcService(
+  client = new cuentasProto(
   'ms-cuentas:9090',
   grpc.credentials.createInsecure() // No se usa seguridad
   );
@@ -28,7 +26,6 @@ try {
   console.error('Error al crear el cliente gRPC:', error);
 }
 
-console.log("CLIENTEEEEE", cliente);
 // Función para obtener una cuenta mediante gRPC
 function obtenerCuenta(id) {
   return new Promise((resolve, reject) => {
