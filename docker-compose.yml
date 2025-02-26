@@ -1,43 +1,42 @@
 version: "3.7"
 
 services:
-  zookeeper:
-    image: confluentinc/cp-zookeeper:latest
-    container_name: zookeeper
-    restart: always
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
-    networks:
-      - integration-net
+  # zookeeper:
+  #   image: confluentinc/cp-zookeeper:latest
+  #   container_name: zookeeper
+  #   restart: always
+  #   environment:
+  #     ZOOKEEPER_CLIENT_PORT: 2181
+  #     ZOOKEEPER_TICK_TIME: 2000
+  #   networks:
+  #     - integration-net
 
-  kafka:
-    image: confluentinc/cp-kafka:latest
-    container_name: kafka
-    hostname: kafka
-    restart: always
-    ports:
-      - "9092:9092"
-    environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-    depends_on:
-      - zookeeper
-    networks:
-      - integration-net
-    command: >
-      bash -c "
-      /etc/confluent/docker/run &
-      sleep 10 &&
-      kafka-topics --create --if-not-exists --topic solicitar-estado-cuenta --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1 &&
-      kafka-topics --create --if-not-exists --topic cuentasdb.public.cuentas --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1 &&
-      kafka-topics --create --if-not-exists --topic cuentasdb.public.consumos --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1 &&
-      wait
-      "
+  # kafka:
+  #   image: confluentinc/cp-kafka:latest
+  #   container_name: kafka
+  #   hostname: kafka
+  #   restart: always
+  #   ports:
+  #     - "9092:9092"
+  #   environment:
+  #     KAFKA_BROKER_ID: 1
+  #     KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+  #     KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+  #     KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+  #   depends_on:
+  #     - zookeeper
+  #   networks:
+  #     - integration-net
+  #   command: >
+  #     bash -c "
+  #     /etc/confluent/docker/run &
+  #     sleep 10 &&
+  #     kafka-topics --create --if-not-exists --topic solicitar-estado-cuenta --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1 &&
+  #     kafka-topics --create --if-not-exists --topic cuentasdb.public.cuentas --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1 &&
+  #     kafka-topics --create --if-not-exists --topic cuentasdb.public.consumos --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1 &&
+  #     wait
+  #     "
 
-  # postgres:
   postgres:
     image: postgres:14-alpine
     container_name: postgres-cuentas
@@ -56,6 +55,7 @@ services:
     build:
       context: ./services/ms-cuentas
       dockerfile: Dockerfile
+    hostname: ms-cuentas
     container_name: ms-cuentas
     environment:
       DB_HOST: postgres
@@ -69,84 +69,85 @@ services:
     depends_on:
       - postgres
     networks:
-      - integration-net
-
-  mariadb:
-    container_name: mariadb
-    image: mariadb:10.5
-    environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: cuentasdb
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
-    ports:
-      - "3305:3306"
-    volumes:
-      - mariadb-data:/var/lib/mysql
-    networks:
-      - integration-net
-
-  kafka-consumer:
+      - integration-net  
     restart: always
-    container_name: kafka-consumer
-    build:
-      context: ./services/micro-cdc/kafka-consumer
-      dockerfile: DockerFile
-    depends_on:
-      - kafka
-      - mariadb
-    environment:
-      KAFKA_BROKER: kafka:9092
-      MARIADB_HOST: mariadb
-      MARIADB_USER: user
-      MARIADB_PASSWORD: password
-      MARIADB_DATABASE: cuentasdb
-    volumes:
-      - ./kafka-consumer:/app
-    networks:
-      - integration-net
 
-  debezium:
-    image: debezium/connect:1.7
-    restart: always
-    depends_on:
-      - kafka
-      #- postgres
-    environment:
-      BOOTSTRAP_SERVERS: kafka:9092
-      GROUP_ID: 1
-      CONFIG_STORAGE_TOPIC: my_connect_configs
-      OFFSET_STORAGE_TOPIC: my_connect_offsets
-      STATUS_STORAGE_TOPIC: my_connect_statuses
-    ports:
-      - "8083:8083"
-    volumes:
-      - ./debezium-connector:/debezium-connector
-    networks:
-      - integration-net
 
-  micro-estado-cuenta:
-    build:
-        context: ./services/micro-estado-cuenta
-        dockerfile: Dockerfile
-    container_name: micro-estado-cuenta
-    ports:
-      - "26061:26061"
-    depends_on:
-      - kafka
-    networks:
-      - integration-net
 
-  micro-estado-cuenta-notificacion:    
-    build: 
-        context: ./services/micro-estado-cuenta-notificacion
-        dockerfile: Dockerfile
-    container_name: micro-estado-cuenta-notificacion
-    restart: always
-    depends_on:
-      - kafka
-    networks:
-      - integration-net
+  # mariadb:
+  #   container_name: mariadb
+  #   image: mariadb:10.5
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: rootpassword
+  #     MYSQL_DATABASE: cuentasdb
+  #     MYSQL_USER: user
+  #     MYSQL_PASSWORD: password
+  #   ports:
+  #     - "3305:3306"
+  #   volumes:
+  #     - mariadb-data:/var/lib/mysql
+  #   networks:
+  #     - integration-net
+
+  # kafka-consumer:
+  #   restart: always
+  #   container_name: kafka-consumer
+  #   build:
+  #     context: ./services/micro-cdc/kafka-consumer
+  #     dockerfile: DockerFile
+  #   depends_on:
+  #     - kafka
+  #     - mariadb
+  #   environment:
+  #     KAFKA_BROKER: kafka:9092
+  #     MARIADB_HOST: mariadb
+  #     MARIADB_USER: user
+  #     MARIADB_PASSWORD: password
+  #     MARIADB_DATABASE: cuentasdb
+  #   volumes:
+  #     - ./kafka-consumer:/app
+  #   networks:
+  #     - integration-net
+
+  # debezium:
+  #   image: debezium/connect:1.7
+  #   restart: always
+  #   depends_on:
+  #     - kafka
+  #     #- postgres
+  #   environment:
+  #     BOOTSTRAP_SERVERS: kafka:9092
+  #     GROUP_ID: 1
+  #     CONFIG_STORAGE_TOPIC: my_connect_configs
+  #     OFFSET_STORAGE_TOPIC: my_connect_offsets
+  #     STATUS_STORAGE_TOPIC: my_connect_statuses
+  #   ports:
+  #     - "8083:8083"
+  #   volumes:
+  #     - ./debezium-connector:/debezium-connector
+  #   networks:
+  #     - integration-net
+
+  # micro-estado-cuenta:
+  #   build:
+  #       context: ./services/micro-estado-cuenta
+  #       dockerfile: Dockerfile
+  #   container_name: micro-estado-cuenta
+  #   ports:
+  #     - "26061:26061"
+  #   depends_on:
+  #     - kafka
+  #   networks:
+  #     - integration-net
+
+  # micro-estado-cuenta-notificacion:    
+  #   build: 
+  #       context: ./services/micro-estado-cuenta-notificacion
+  #       dockerfile: Dockerfile
+  #   container_name: micro-estado-cuenta-notificacion
+  #   restart: always
+  #   depends_on:
+  #     - kafka
 
   # # KONG API GATEWAY
   # kong:
@@ -155,7 +156,6 @@ services:
   #   restart: always
   #   ports:
   #     - "8000:8000"   # Puerto de entradas proxy (HTTP)
-  #     - "8443:8443"   # Puerto de entradas proxy (HTTPS) si se configura
   #     - "8001:8001"   # Puerto Admin API (no exponer en prod)
   #   volumes:
   #     - ./kong/kong.yml:/usr/local/kong/declarative/kong.yml:ro
@@ -169,14 +169,17 @@ services:
   #   networks:
   #     - integration-net
 
-  # # SERVIDOR GRAPHQL
-  # graphql-server:
-  #   build: ./services/graphql-server
-  #   container_name: graphql-server
-  #   ports:
-  #     - "4000:4000"
-  #   networks:
-  #     - integration-net
+  # SERVIDOR GRAPHQL
+  graphql-server:
+    build: ./services/graphql-server
+    container_name: graphql-server
+    ports:
+      - "4000:4000"
+    networks:
+      - integration-net
+    # depends_on:
+      # - ms-cuentas
+      # - kong
 
   # # MICRO-AUTH (para conectar con Auth0)
   # micro-auth:
