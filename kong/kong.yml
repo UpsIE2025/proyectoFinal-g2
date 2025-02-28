@@ -7,9 +7,10 @@ services:
       - name: graphql-route
         paths:
           - /graphql
-        strip_path: true
+        strip_path: false
         methods:
           - POST
+          - GET
         protocols:
           - http
           - https
@@ -17,6 +18,7 @@ services:
       - name: cors
         config:
           origins: ["*"]
-          methods: ["POST"]
-          headers: ["Authorization", "Content-Type"]
-          credentials: true
+          methods: ["POST", "GET"]
+          # headers: ["Authorization", "Content-Type"]
+          # credentials: true
+          headers: ["Content-Type"]

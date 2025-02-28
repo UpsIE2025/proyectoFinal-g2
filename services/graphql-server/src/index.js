@@ -52,10 +52,10 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    estadoDeCuenta: async (_, { cuenta }, context) => {
+    estadoDeCuenta: async (_, { id }, context) => {
       // Llamada REST a micro-estado-cuenta
       // if (!context.user) throw new Error("Unauthorized");
-      const res = await fetch(`http://micro-estado-cuenta:26061/v1/estado-cuenta/${cuenta}`, {
+      const res = await fetch(`http://micro-estado-cuenta:26061/v1/estado-cuenta/${id}`, {
         // headers: { Authorization: context.authHeader}
       });
       return res.json();

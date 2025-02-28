@@ -133,6 +133,7 @@ services:
         context: ./services/micro-estado-cuenta
         dockerfile: Dockerfile
     container_name: micro-estado-cuenta
+    hostname: micro-estado-cuenta
     ports:
       - "26061:26061"
     depends_on:
@@ -153,6 +154,7 @@ services:
   kong:
     image: kong:3.2 
     container_name: kong
+    hostname: kong
     restart: always
     ports:
       - "8000:8000"   # Public API Gateway (React Native calls this)
@@ -173,6 +175,7 @@ services:
   graphql-server:
     build: ./services/graphql-server
     container_name: graphql-server
+    hostname: graphql-server
     ports:
       - "4000:4000" # Apollo Server
     environment:
