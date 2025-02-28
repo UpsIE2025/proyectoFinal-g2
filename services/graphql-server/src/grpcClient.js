@@ -105,6 +105,7 @@ function listarConsumos(cuenta_id) {
       if(err) {
         reject(err);
       } else {
+        console.log("CONSUMOOOO", response);
         resolve(response);
       }
     });

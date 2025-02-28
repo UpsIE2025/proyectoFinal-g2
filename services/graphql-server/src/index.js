@@ -24,6 +24,14 @@ const typeDefs = gql`
     estado: String
     fecha_consumo: String
   }
+  
+  type Cuentas {
+    cuentas: [Cuenta]
+  }
+
+  type Consumos {
+    consumos: [Consumo]
+  }
 
   type EstadoDeCuenta {
     success: Boolean
@@ -40,9 +48,9 @@ const typeDefs = gql`
   type Query {
     estadoDeCuenta(id: ID!): EstadoDeCuenta
     obtenerCuenta(id: ID!): Cuenta
-    listarCuentas(id: ID!): [Cuenta]!
+    listarCuentas(id: ID!): Cuentas
     obtenerConsumo(id: ID!): Consumo
-    listarConsumos(id: ID!): [Consumo]!
+    listarConsumos(id: ID!): Consumos
   }
 
   type Mutation {
