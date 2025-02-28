@@ -131,6 +131,19 @@ services:
     networks:
       - integration-net
 
+ # GraphQL Gateway
+  gateway-graphql:
+    build: ./services/gateway-graphql
+    container_name: gateway-graphql
+    ports:
+      - "4000:4000"
+    depends_on:
+      - ms-cuentas
+      - micro-estado-cuenta
+      # mas servicios
+    networks:
+      - integration-net 
+
   micro-estado-cuenta:
     build:
         context: ./services/micro-estado-cuenta
@@ -155,13 +168,13 @@ services:
 
   # KONG API GATEWAY
   kong:
-    image: kong:3.2 
+    image: kong:3.2  # versión de ejemplo
     container_name: kong
-    hostname: kong
     restart: always
     ports:
-      - "8000:8000"   # Public API Gateway (React Native calls this)
-      - "8001:8001"    # Admin API (only for configuration)
+      - "8000:8000"   # Puerto de entradas proxy (HTTP)
+      - "8443:8443"   # Puerto de entradas proxy (HTTPS) si se configura
+      - "8001:8001"   # Puerto Admin API (no exponer en prod)
     volumes:
       - ./kong/kong.yml:/usr/local/kong/declarative/kong.yml:ro
     environment:
@@ -178,26 +191,17 @@ services:
   graphql-server:
     build: ./services/graphql-server
     container_name: graphql-server
-    hostname: graphql-server
     ports:
-      - "4000:4000" # Apollo Server
-    environment:
-      - MICRO_AUTH_URL=http://micro-auth:3000
+      - "4000:4000"
     networks:
       - integration-net
-    depends_on:
-      - ms-cuentas
 
-  # MICRO-AUTH (llama a Auth0)
+  # MICRO-AUTH (para conectar con Auth0)
   micro-auth:
     build: ./services/micro-auth
     container_name: micro-auth
     ports:
       - "3000:3000"
-    environment:
-      - AUTH0_DOMAIN=dev-88x6n0ntfccbwhfp.us.auth0.com
-      - AUTH0_AUDIENCE=https://dev-88x6n0ntfccbwhfp.us.auth0.com/api/v2/
-      - PORT=3000
     networks:
       - integration-net
 
