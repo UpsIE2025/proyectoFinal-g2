@@ -135,30 +135,30 @@ services:
     networks:
       - integration-net
 
-  # GraphQL Gateway
-  # gateway-graphql:
-  #   build: ./services/gateway-graphql
-  #   container_name: gateway-graphql
-  #   ports:
-  #     - "4000:4000"
-  #   depends_on:
-  #     - ms-cuentas
-  #     - micro-estado-cuenta
-  #     # mas servicios
-  #   networks:
-  #     - integration-net 
+ # GraphQL Gateway
+  gateway-graphql:
+    build: ./services/gateway-graphql
+    container_name: gateway-graphql
+    ports:
+      - "4000:4000"
+    depends_on:
+      - ms-cuentas
+      - micro-estado-cuenta
+      # mas servicios
+    networks:
+      - integration-net 
 
-  # micro-estado-cuenta:
-  #   build:
-  #       context: ./services/micro-estado-cuenta
-  #       dockerfile: Dockerfile
-  #   container_name: micro-estado-cuenta
-  #   ports:
-  #     - "26061:26061"
-  #   depends_on:
-  #     - kafka
-  #   networks:
-  #     - integration-net
+  micro-estado-cuenta:
+    build:
+        context: ./services/micro-estado-cuenta
+        dockerfile: Dockerfile
+    container_name: micro-estado-cuenta
+    ports:
+      - "26061:26061"
+    depends_on:
+      - kafka
+    networks:
+      - integration-net
 
   micro-estado-cuenta-notificacion:    
     build: 
@@ -169,44 +169,44 @@ services:
     depends_on:
       - kafka
 
-  # # KONG API GATEWAY
-  # kong:
-  #   image: kong:3.2  # versión de ejemplo
-  #   container_name: kong
-  #   restart: always
-  #   ports:
-  #     - "8000:8000"   # Puerto de entradas proxy (HTTP)
-  #     - "8443:8443"   # Puerto de entradas proxy (HTTPS) si se configura
-  #     - "8001:8001"   # Puerto Admin API (no exponer en prod)
-  #   volumes:
-  #     - ./kong/kong.yml:/usr/local/kong/declarative/kong.yml:ro
-  #   environment:
-  #     KONG_DECLARATIVE_CONFIG: /usr/local/kong/declarative/kong.yml
-  #     KONG_DATABASE: "off"  # DB-less
-  #     KONG_PROXY_ACCESS_LOG: /dev/stdout
-  #     KONG_ADMIN_ACCESS_LOG: /dev/stdout
-  #     KONG_PROXY_ERROR_LOG: /dev/stderr
-  #     KONG_ADMIN_ERROR_LOG: /dev/stderr
-  #   networks:
-  #     - integration-net
+  # KONG API GATEWAY
+  kong:
+    image: kong:3.2  # versión de ejemplo
+    container_name: kong
+    restart: always
+    ports:
+      - "8000:8000"   # Puerto de entradas proxy (HTTP)
+      - "8443:8443"   # Puerto de entradas proxy (HTTPS) si se configura
+      - "8001:8001"   # Puerto Admin API (no exponer en prod)
+    volumes:
+      - ./kong/kong.yml:/usr/local/kong/declarative/kong.yml:ro
+    environment:
+      KONG_DECLARATIVE_CONFIG: /usr/local/kong/declarative/kong.yml
+      KONG_DATABASE: "off"  # DB-less
+      KONG_PROXY_ACCESS_LOG: /dev/stdout
+      KONG_ADMIN_ACCESS_LOG: /dev/stdout
+      KONG_PROXY_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_ERROR_LOG: /dev/stderr
+    networks:
+      - integration-net
 
-  # # SERVIDOR GRAPHQL
-  # graphql-server:
-  #   build: ./services/graphql-server
-  #   container_name: graphql-server
-  #   ports:
-  #     - "4000:4000"
-  #   networks:
-  #     - integration-net
+  # SERVIDOR GRAPHQL
+  graphql-server:
+    build: ./services/graphql-server
+    container_name: graphql-server
+    ports:
+      - "4000:4000"
+    networks:
+      - integration-net
 
-  # # MICRO-AUTH (para conectar con Auth0)
-  # micro-auth:
-  #   build: ./services/micro-auth
-  #   container_name: micro-auth
-  #   ports:
-  #     - "3000:3000"
-  #   networks:
-  #     - integration-net
+  # MICRO-AUTH (para conectar con Auth0)
+  micro-auth:
+    build: ./services/micro-auth
+    container_name: micro-auth
+    ports:
+      - "3000:3000"
+    networks:
+      - integration-net
 
 networks:
   integration-net:
