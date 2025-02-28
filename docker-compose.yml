@@ -37,7 +37,6 @@ services:
       wait
       "
 
-  # postgres:
   postgres:
     image: postgres:14-alpine
     container_name: postgres-cuentas
@@ -58,6 +57,7 @@ services:
     build:
       context: ./services/ms-cuentas
       dockerfile: Dockerfile
+    hostname: ms-cuentas
     container_name: ms-cuentas
     environment:
       DB_HOST: postgres
@@ -71,7 +71,11 @@ services:
     depends_on:
       - postgres
     networks:
-      - integration-net
+      - integration-net  
+    restart: always
+
+
+
   mariadb:
     container_name: mariadb
     image: mariadb:10.5
@@ -88,11 +92,12 @@ services:
       - integration-net
 
   kafka-consumer:
-    container_name: kafka-consumer
     restart: always
+    container_name: kafka-consumer
+   
     build:
       context: ./services/micro-cdc/kafka-consumer
-      dockerfile: Dockerfile
+      dockerfile: DockerFile
     depends_on:
       - kafka
       - mariadb
@@ -109,6 +114,7 @@ services:
 
   debezium:
     image: debezium/connect:1.7
+    restart: always
     depends_on:
       - kafka
       #- postgres
@@ -127,9 +133,10 @@ services:
 
   micro-estado-cuenta:
     build:
-      context: ./services/micro-estado-cuenta
-      dockerfile: Dockerfile
+        context: ./services/micro-estado-cuenta
+        dockerfile: Dockerfile
     container_name: micro-estado-cuenta
+    hostname: micro-estado-cuenta
     ports:
       - "26061:26061"
     depends_on:
@@ -148,18 +155,18 @@ services:
 
   # KONG API GATEWAY
   kong:
-    image: kong:3.2 # versión de ejemplo
+    image: kong:3.2 
     container_name: kong
+    hostname: kong
     restart: always
     ports:
-      - "8000:8000" # Puerto de entradas proxy (HTTP)
-      - "8443:8443" # Puerto de entradas proxy (HTTPS) si se configura
-      - "8001:8001" # Puerto Admin API (no exponer en prod)
+      - "8000:8000"   # Public API Gateway (React Native calls this)
+      - "8001:8001"    # Admin API (only for configuration)
     volumes:
       - ./kong/kong.yml:/usr/local/kong/declarative/kong.yml:ro
     environment:
       KONG_DECLARATIVE_CONFIG: /usr/local/kong/declarative/kong.yml
-      KONG_DATABASE: "off" # DB-less
+      KONG_DATABASE: "off"  # DB-less
       KONG_PROXY_ACCESS_LOG: /dev/stdout
       KONG_ADMIN_ACCESS_LOG: /dev/stdout
       KONG_PROXY_ERROR_LOG: /dev/stderr
@@ -171,17 +178,26 @@ services:
   graphql-server:
     build: ./services/graphql-server
     container_name: graphql-server
+    hostname: graphql-server
     ports:
-      - "4000:4000"
+      - "4000:4000" # Apollo Server
+    environment:
+      - MICRO_AUTH_URL=http://micro-auth:3000
     networks:
       - integration-net
+    depends_on:
+      - ms-cuentas
 
-  # MICRO-AUTH (para conectar con Auth0)
+  # MICRO-AUTH (llama a Auth0)
   micro-auth:
     build: ./services/micro-auth
     container_name: micro-auth
     ports:
       - "3000:3000"
+    environment:
+      - AUTH0_DOMAIN=dev-88x6n0ntfccbwhfp.us.auth0.com
+      - AUTH0_AUDIENCE=https://dev-88x6n0ntfccbwhfp.us.auth0.com/api/v2/
+      - PORT=3000
     networks:
       - integration-net
 
@@ -190,6 +206,5 @@ networks:
     driver: bridge
 
 volumes:
-  #mysql_data:
   postgres_data:
   mariadb-data:

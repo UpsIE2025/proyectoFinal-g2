@@ -1,0 +1,66 @@
+syntax = "proto3";
+
+option java_package = "edu.ups.ms_cuentas.proto";
+option java_multiple_files = true;
+option java_outer_classname = "CuentaOuterClass";
+option java_generate_equals_and_hash = true;
+
+message CuentaProto {
+    string id = 1;
+    string usuario_id = 2;
+    double saldo = 3;
+    string estado = 4;
+    string fecha_creacion = 5;
+}
+
+message ConsumoProto {
+    string id = 1;
+    string cuenta_id = 2;
+    string descripcion = 3;
+    double monto = 4;
+    string estado = 5;
+    string fecha_consumo = 6;
+}
+
+message CrearCuentaRequest {
+    string usuario_id = 1;
+    double saldo_inicial = 2;
+}
+
+message ActualizarCuentaRequest {
+    string id = 1;
+    double saldo = 2;
+    string estado = 3;
+}
+
+message CrearConsumoRequest {
+    string cuenta_id = 1;
+    string descripcion = 2;
+    double monto = 3;
+}
+
+message GetCuentaRequest {
+    string id = 1;
+}
+
+message GetConsumoRequest {
+    string id = 1;
+}
+
+message ListaCuentasResponse {
+    repeated CuentaProto cuentas = 1;
+}
+
+message ListaConsumosResponse {
+    repeated ConsumoProto consumos = 1;
+}
+
+service CuentaGrpcService {
+    rpc CrearCuenta (CrearCuentaRequest) returns (CuentaProto);
+    rpc ActualizarCuenta (ActualizarCuentaRequest) returns (CuentaProto);
+    rpc ObtenerCuenta (GetCuentaRequest) returns (CuentaProto);
+    rpc ListarCuentas (GetCuentaRequest) returns (ListaCuentasResponse);
+    rpc CrearConsumo (CrearConsumoRequest) returns (ConsumoProto);
+    rpc ObtenerConsumo (GetConsumoRequest) returns (ConsumoProto);
+    rpc ListarConsumos (GetConsumoRequest) returns (ListaConsumosResponse);
+}
