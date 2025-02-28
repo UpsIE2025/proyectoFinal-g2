@@ -35,7 +35,7 @@ app.post('/validate', (req, res) => {
       return res.status(401).json({ error: 'Invalid Token', details: err.message });
     }
     // Retornar info del usuario
-    return res.json({ valid:true, user: decoded });
+    return res.json({ valid: true, user: decoded });
   });
 });
 
