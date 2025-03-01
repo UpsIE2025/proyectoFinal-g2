@@ -11,6 +11,7 @@ import PayBillScreen from './screens/PayBillScreen';
 import SelectConsumptionScreen from './screens/SelectConsumptionScreen';
 import CreateAccountScreen from './screens/CreateAccountScreen';
 import ListAccountsScreen from './screens/ListAccountsScreen';
+import ListConsumptionsScreen from './screens/ListConsumptionsScreen';
 
 const Stack = createStackNavigator();
 
@@ -95,6 +96,7 @@ const AppNavigator = () => (
       <Stack.Screen name="PayBill" component={PayBillScreen} />
       <Stack.Screen name="CreateAccount" component={CreateAccountScreen} />
       <Stack.Screen name="ListAccounts" component={ListAccountsScreen} />
+      <Stack.Screen name="ListConsumption" component={ListConsumptionsScreen} />
     </Stack.Navigator>
   </NavigationContainer>
 );
