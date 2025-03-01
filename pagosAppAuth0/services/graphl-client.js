@@ -146,8 +146,6 @@ export const crearCuentaApollo = async (usuarioId, saldoInicial) => {
       token = await AsyncStorage.getItem('token');
     } catch (error) {
       console.error("Error retrieving token:", error);
-      // Fallback to the hardcoded token if AsyncStorage fails
-      token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkdWdWpTQWt6Z2ZnY3k4RVd2U3NaRSJ9.eyJpc3MiOiJodHRwczovL2Rldi04OHg2bjBudGZjY2J3aGZwLnVzLmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw2N2MxMmI1YmRkMzZlNWZiYzliYzFjM2IiLCJhdWQiOlsiaHR0cHM6Ly9kZXYtODh4Nm4wbnRmY2Nid2hmcC51cy5hdXRoMC5jb20vYXBpL3YyLyIsImh0dHBzOi8vZGV2LTg4eDZuMG50ZmNjYndoZnAudXMuYXV0aDAuY29tL3VzZXJpbmZvIl0sImlhdCI6MTc0MDc5NTM5NSwiZXhwIjoxNzQwODgxNzk1LCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIiwiYXpwIjoiVU1IQmtkdHJtMEV3WnJMSHBzdnl6bVEwY2t4Z2pKMjgifQ.2NcHrFPNtLfsEk7lQVLR0A_M_O6H8shxaeBwrbOmbaPQgjEz4LaxQv6AC-0YBQApkFP3FwW4D2B8h6ShmwMFqjiDFDRNRPp1mToV40oeqMZIlZrZqvSL-qWy-XcCF471gQb4qYcbiLb19ynDfhI_J29r64iuR3FH-ywmSWflx8dCUCyulNwDmIfHyHdjtacXkpHe0LHpXZFysG1bRLmyNEgrBQKdnwF8ExdeY9edxUtLu2Cz3AaXRKDM7Y2q87Q8L13cV_LPnYB-F0KvAIyaWn4LznecAVA07tf4RR-gMt6BGtBRNum4BVWZvIZ_ECIWMCA9ypWxjRjy9aHD-nuT2Q";
     }
   
     // Create the GraphQL query
