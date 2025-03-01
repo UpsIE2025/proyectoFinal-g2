@@ -23,6 +23,9 @@ const CreateConsumptionScreen = ({ navigation }) => {
   const handleListAccounts = () => {
     navigation.replace('ListAccounts', { amount });
   };
+  const handleListConsumptions = () => {
+    navigation.replace('ListConsumption', { amount });
+  };
 
   const handleLogout = async () => {
     // Aquí podrías limpiar la sesión y redirigir al login
@@ -61,7 +64,7 @@ const CreateConsumptionScreen = ({ navigation }) => {
           <Icon name="credit-card" size={40} color="#6200ee" />
           <Text style={styles.actionText}>Listar Cuentas</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.actionButton}>
+        <TouchableOpacity style={styles.actionButton}  onPress={handleListConsumptions}>
           <Icon name="history" size={40} color="#6200ee" />
           <Text style={styles.actionText}>Listar Consumos</Text>
         </TouchableOpacity>
