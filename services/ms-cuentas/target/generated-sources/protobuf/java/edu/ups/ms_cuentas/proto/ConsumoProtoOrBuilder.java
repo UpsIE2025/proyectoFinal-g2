@@ -51,26 +51,26 @@ public interface ConsumoProtoOrBuilder extends
   double getMonto();
 
   /**
-   * <code>string estado = 5;</code>
-   * @return The estado.
-   */
-  java.lang.String getEstado();
-  /**
-   * <code>string estado = 5;</code>
-   * @return The bytes for estado.
-   */
-  com.google.protobuf.ByteString
-      getEstadoBytes();
-
-  /**
-   * <code>string fecha_consumo = 6;</code>
+   * <code>string fecha_consumo = 5;</code>
    * @return The fechaConsumo.
    */
   java.lang.String getFechaConsumo();
   /**
-   * <code>string fecha_consumo = 6;</code>
+   * <code>string fecha_consumo = 5;</code>
    * @return The bytes for fechaConsumo.
    */
   com.google.protobuf.ByteString
       getFechaConsumoBytes();
+
+  /**
+   * <code>string estado = 6;</code>
+   * @return The estado.
+   */
+  java.lang.String getEstado();
+  /**
+   * <code>string estado = 6;</code>
+   * @return The bytes for estado.
+   */
+  com.google.protobuf.ByteString
+      getEstadoBytes();
 }

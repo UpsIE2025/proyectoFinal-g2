@@ -20,8 +20,8 @@ private static final long serialVersionUID = 0L;
     id_ = "";
     cuentaId_ = "";
     descripcion_ = "";
-    estado_ = "";
     fechaConsumo_ = "";
+    estado_ = "";
   }
 
   @java.lang.Override
@@ -172,50 +172,11 @@ private static final long serialVersionUID = 0L;
     return monto_;
   }
 
-  public static final int ESTADO_FIELD_NUMBER = 5;
-  @SuppressWarnings("serial")
-  private volatile java.lang.Object estado_ = "";
-  /**
-   * <code>string estado = 5;</code>
-   * @return The estado.
-   */
-  @java.lang.Override
-  public java.lang.String getEstado() {
-    java.lang.Object ref = estado_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      estado_ = s;
-      return s;
-    }
-  }
-  /**
-   * <code>string estado = 5;</code>
-   * @return The bytes for estado.
-   */
-  @java.lang.Override
-  public com.google.protobuf.ByteString
-      getEstadoBytes() {
-    java.lang.Object ref = estado_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      estado_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  public static final int FECHA_CONSUMO_FIELD_NUMBER = 6;
+  public static final int FECHA_CONSUMO_FIELD_NUMBER = 5;
   @SuppressWarnings("serial")
   private volatile java.lang.Object fechaConsumo_ = "";
   /**
-   * <code>string fecha_consumo = 6;</code>
+   * <code>string fecha_consumo = 5;</code>
    * @return The fechaConsumo.
    */
   @java.lang.Override
@@ -232,7 +193,7 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <code>string fecha_consumo = 6;</code>
+   * <code>string fecha_consumo = 5;</code>
    * @return The bytes for fechaConsumo.
    */
   @java.lang.Override
@@ -244,6 +205,45 @@ private static final long serialVersionUID = 0L;
           com.google.protobuf.ByteString.copyFromUtf8(
               (java.lang.String) ref);
       fechaConsumo_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int ESTADO_FIELD_NUMBER = 6;
+  @SuppressWarnings("serial")
+  private volatile java.lang.Object estado_ = "";
+  /**
+   * <code>string estado = 6;</code>
+   * @return The estado.
+   */
+  @java.lang.Override
+  public java.lang.String getEstado() {
+    java.lang.Object ref = estado_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      estado_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string estado = 6;</code>
+   * @return The bytes for estado.
+   */
+  @java.lang.Override
+  public com.google.protobuf.ByteString
+      getEstadoBytes() {
+    java.lang.Object ref = estado_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      estado_ = b;
       return b;
     } else {
       return (com.google.protobuf.ByteString) ref;
@@ -276,11 +276,11 @@ private static final long serialVersionUID = 0L;
     if (java.lang.Double.doubleToRawLongBits(monto_) != 0) {
       output.writeDouble(4, monto_);
     }
-    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(estado_)) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 5, estado_);
-    }
     if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(fechaConsumo_)) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 6, fechaConsumo_);
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 5, fechaConsumo_);
+    }
+    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(estado_)) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 6, estado_);
     }
     getUnknownFields().writeTo(output);
   }
@@ -304,11 +304,11 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeDoubleSize(4, monto_);
     }
-    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(estado_)) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, estado_);
-    }
     if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(fechaConsumo_)) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, fechaConsumo_);
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, fechaConsumo_);
+    }
+    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(estado_)) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, estado_);
     }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
@@ -334,10 +334,10 @@ private static final long serialVersionUID = 0L;
     if (java.lang.Double.doubleToLongBits(getMonto())
         != java.lang.Double.doubleToLongBits(
             other.getMonto())) return false;
-    if (!getEstado()
-        .equals(other.getEstado())) return false;
     if (!getFechaConsumo()
         .equals(other.getFechaConsumo())) return false;
+    if (!getEstado()
+        .equals(other.getEstado())) return false;
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
@@ -358,10 +358,10 @@ private static final long serialVersionUID = 0L;
     hash = (37 * hash) + MONTO_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
         java.lang.Double.doubleToLongBits(getMonto()));
-    hash = (37 * hash) + ESTADO_FIELD_NUMBER;
-    hash = (53 * hash) + getEstado().hashCode();
     hash = (37 * hash) + FECHA_CONSUMO_FIELD_NUMBER;
     hash = (53 * hash) + getFechaConsumo().hashCode();
+    hash = (37 * hash) + ESTADO_FIELD_NUMBER;
+    hash = (53 * hash) + getEstado().hashCode();
     hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -497,8 +497,8 @@ private static final long serialVersionUID = 0L;
       cuentaId_ = "";
       descripcion_ = "";
       monto_ = 0D;
-      estado_ = "";
       fechaConsumo_ = "";
+      estado_ = "";
       return this;
     }
 
@@ -545,10 +545,10 @@ private static final long serialVersionUID = 0L;
         result.monto_ = monto_;
       }
       if (((from_bitField0_ & 0x00000010) != 0)) {
-        result.estado_ = estado_;
+        result.fechaConsumo_ = fechaConsumo_;
       }
       if (((from_bitField0_ & 0x00000020) != 0)) {
-        result.fechaConsumo_ = fechaConsumo_;
+        result.estado_ = estado_;
       }
     }
 
@@ -614,13 +614,13 @@ private static final long serialVersionUID = 0L;
       if (other.getMonto() != 0D) {
         setMonto(other.getMonto());
       }
-      if (!other.getEstado().isEmpty()) {
-        estado_ = other.estado_;
+      if (!other.getFechaConsumo().isEmpty()) {
+        fechaConsumo_ = other.fechaConsumo_;
         bitField0_ |= 0x00000010;
         onChanged();
       }
-      if (!other.getFechaConsumo().isEmpty()) {
-        fechaConsumo_ = other.fechaConsumo_;
+      if (!other.getEstado().isEmpty()) {
+        estado_ = other.estado_;
         bitField0_ |= 0x00000020;
         onChanged();
       }
@@ -671,12 +671,12 @@ private static final long serialVersionUID = 0L;
               break;
             } // case 33
             case 42: {
-              estado_ = input.readStringRequireUtf8();
+              fechaConsumo_ = input.readStringRequireUtf8();
               bitField0_ |= 0x00000010;
               break;
             } // case 42
             case 50: {
-              fechaConsumo_ = input.readStringRequireUtf8();
+              estado_ = input.readStringRequireUtf8();
               bitField0_ |= 0x00000020;
               break;
             } // case 50
@@ -945,81 +945,9 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private java.lang.Object estado_ = "";
-    /**
-     * <code>string estado = 5;</code>
-     * @return The estado.
-     */
-    public java.lang.String getEstado() {
-      java.lang.Object ref = estado_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        estado_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
-    }
-    /**
-     * <code>string estado = 5;</code>
-     * @return The bytes for estado.
-     */
-    public com.google.protobuf.ByteString
-        getEstadoBytes() {
-      java.lang.Object ref = estado_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        estado_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <code>string estado = 5;</code>
-     * @param value The estado to set.
-     * @return This builder for chaining.
-     */
-    public Builder setEstado(
-        java.lang.String value) {
-      if (value == null) { throw new NullPointerException(); }
-      estado_ = value;
-      bitField0_ |= 0x00000010;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string estado = 5;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearEstado() {
-      estado_ = getDefaultInstance().getEstado();
-      bitField0_ = (bitField0_ & ~0x00000010);
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string estado = 5;</code>
-     * @param value The bytes for estado to set.
-     * @return This builder for chaining.
-     */
-    public Builder setEstadoBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) { throw new NullPointerException(); }
-      checkByteStringIsUtf8(value);
-      estado_ = value;
-      bitField0_ |= 0x00000010;
-      onChanged();
-      return this;
-    }
-
     private java.lang.Object fechaConsumo_ = "";
     /**
-     * <code>string fecha_consumo = 6;</code>
+     * <code>string fecha_consumo = 5;</code>
      * @return The fechaConsumo.
      */
     public java.lang.String getFechaConsumo() {
@@ -1035,7 +963,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string fecha_consumo = 6;</code>
+     * <code>string fecha_consumo = 5;</code>
      * @return The bytes for fechaConsumo.
      */
     public com.google.protobuf.ByteString
@@ -1052,7 +980,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string fecha_consumo = 6;</code>
+     * <code>string fecha_consumo = 5;</code>
      * @param value The fechaConsumo to set.
      * @return This builder for chaining.
      */
@@ -1060,22 +988,22 @@ private static final long serialVersionUID = 0L;
         java.lang.String value) {
       if (value == null) { throw new NullPointerException(); }
       fechaConsumo_ = value;
-      bitField0_ |= 0x00000020;
+      bitField0_ |= 0x00000010;
       onChanged();
       return this;
     }
     /**
-     * <code>string fecha_consumo = 6;</code>
+     * <code>string fecha_consumo = 5;</code>
      * @return This builder for chaining.
      */
     public Builder clearFechaConsumo() {
       fechaConsumo_ = getDefaultInstance().getFechaConsumo();
-      bitField0_ = (bitField0_ & ~0x00000020);
+      bitField0_ = (bitField0_ & ~0x00000010);
       onChanged();
       return this;
     }
     /**
-     * <code>string fecha_consumo = 6;</code>
+     * <code>string fecha_consumo = 5;</code>
      * @param value The bytes for fechaConsumo to set.
      * @return This builder for chaining.
      */
@@ -1084,6 +1012,78 @@ private static final long serialVersionUID = 0L;
       if (value == null) { throw new NullPointerException(); }
       checkByteStringIsUtf8(value);
       fechaConsumo_ = value;
+      bitField0_ |= 0x00000010;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object estado_ = "";
+    /**
+     * <code>string estado = 6;</code>
+     * @return The estado.
+     */
+    public java.lang.String getEstado() {
+      java.lang.Object ref = estado_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        estado_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string estado = 6;</code>
+     * @return The bytes for estado.
+     */
+    public com.google.protobuf.ByteString
+        getEstadoBytes() {
+      java.lang.Object ref = estado_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        estado_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string estado = 6;</code>
+     * @param value The estado to set.
+     * @return This builder for chaining.
+     */
+    public Builder setEstado(
+        java.lang.String value) {
+      if (value == null) { throw new NullPointerException(); }
+      estado_ = value;
+      bitField0_ |= 0x00000020;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string estado = 6;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearEstado() {
+      estado_ = getDefaultInstance().getEstado();
+      bitField0_ = (bitField0_ & ~0x00000020);
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string estado = 6;</code>
+     * @param value The bytes for estado to set.
+     * @return This builder for chaining.
+     */
+    public Builder setEstadoBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) { throw new NullPointerException(); }
+      checkByteStringIsUtf8(value);
+      estado_ = value;
       bitField0_ |= 0x00000020;
       onChanged();
       return this;
