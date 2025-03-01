@@ -38,6 +38,7 @@ services:
       "
 
   postgres:
+    restart: always
     image: postgres:14-alpine
     container_name: postgres-cuentas
     environment:
@@ -48,6 +49,7 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./services/micro-cdc/script/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - integration-net
 
@@ -149,6 +151,8 @@ services:
     restart: always
     depends_on:
       - kafka
+    networks:
+      - integration-net
 
   # KONG API GATEWAY
   kong:
