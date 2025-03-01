@@ -62,30 +62,30 @@ const resolvers = {
   Query: {
     estadoDeCuenta: async (_, { id }, context) => {
       // Llamada REST a micro-estado-cuenta
-      // if (!context.user) throw new Error("Unauthorized");
+      if (!context.user) throw new Error("Unauthorized");
       const res = await fetch(`http://micro-estado-cuenta:26061/v1/estado-cuenta/${id}`, {
-        // headers: { Authorization: context.authHeader}
+        headers: { Authorization: context.authHeader}
       });
       return res.json();
     },
     obtenerCuenta: async(_, { id }, context) => {
       // Llamada gRPC a ms-cuentas
-      // if (!context.user) throw new Error("Unauthorized");
+      if (!context.user) throw new Error("Unauthorized");
       const { obtenerCuenta } = require('./grpcClient');
       return await obtenerCuenta(id);
     },
     listarCuentas: async(_, { id }, context) => {
-      // if (!context.user) throw new Error("Unauthorized");
+      if (!context.user) throw new Error("Unauthorized");
       const { listarCuentas } = require('./grpcClient');
       return await listarCuentas(id);
     },
     obtenerConsumo: async(_, { id }, context) => {
-      // if (!context.user) throw new Error("Unauthorized");
+      if (!context.user) throw new Error("Unauthorized");
       const {obtenerConsumo} = require('./grpcClient');
       return await obtenerConsumo(id);
     },
     listarConsumos: async(_, { id }, context) => {
-      // if (!context.user) throw new Error("Unauthorized");
+      if (!context.user) throw new Error("Unauthorized");
       const {listarConsumos} = require('./grpcClient');
       return await listarConsumos(id);
     }
@@ -94,17 +94,17 @@ const resolvers = {
   Mutation: {
     crearCuenta: async (_, { usuario_id, saldo_inicial }) => {
       // Llamada gRPC a ms-cuentas
-      // if (!context.user) throw new Error("Unauthorized");
+      if (!context.user) throw new Error("Unauthorized");
       const { crearCuenta } = require('./grpcClient');
       return await crearCuenta(usuario_id, saldo_inicial);
     },
     actualizarCuenta: async (_, { id, saldo, estado }) => {
-      // if (!context.user) throw new Error("Unauthorized");
+      if (!context.user) throw new Error("Unauthorized");
       const { actualizarCuenta } = require('./grpcClient');
       return await actualizarCuenta(id, saldo, estado);
     },
     crearConsumo: async (_,{ cuenta_id, descripcion, monto }) => {
-      // if (!context.user) throw new Error("Unauthorized");
+      if (!context.user) throw new Error("Unauthorized");
       const { crearConsumo } = require('./grpcClient');
       return await crearConsumo(cuenta_id, descripcion, monto);
     }
@@ -127,17 +127,17 @@ async function validateToken(authHeader) {
 
 const server = new ApolloServer({
   typeDefs,
-  resolvers
-  // context: async ({ req }) => {
-  //   const authHeader = req.headers.authorization || '';
-  //   let user = null;
-  //   try {
-  //     user = await validateToken(authHeader);
-  //   } catch (err) {
-  //     console.error('JWT Validation Failed:', err);
-  //   }
-  //   return { user, authHeader };
-  // }
+  resolvers,
+  context: async ({ req }) => {
+    const authHeader = req.headers.authorization || '';
+    let user = null;
+    try {
+      user = await validateToken(authHeader);
+    } catch (err) {
+      console.error('JWT Validation Failed:', err);
+    }
+    return { user, authHeader };
+  }
 });
 
 server.start().then(() => {

@@ -10,7 +10,7 @@ services:
         strip_path: false
         methods:
           - POST
-          - GET
+          # - GET
         protocols:
           - http
           - https
@@ -18,7 +18,8 @@ services:
       - name: cors
         config:
           origins: ["*"]
-          methods: ["POST", "GET"]
+          methods: ["POST"]
+          headers: ["Content-Type"]
           # headers: ["Authorization", "Content-Type"]
           # credentials: true
-          headers: ["Content-Type"]
+          
