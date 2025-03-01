@@ -74,7 +74,7 @@ public final class CuentaOuterClass {
       "estado\030\004 \001(\t\022\026\n\016fecha_creacion\030\005 \001(\t\"x\n\014" +
       "ConsumoProto\022\n\n\002id\030\001 \001(\t\022\021\n\tcuenta_id\030\002 " +
       "\001(\t\022\023\n\013descripcion\030\003 \001(\t\022\r\n\005monto\030\004 \001(\001\022" +
-      "\025\n\rfecha_consumo\030\005 \001(\t\022\016\n\006estado\030\006 \001(\t\"?" +
+      "\016\n\006estado\030\005 \001(\t\022\025\n\rfecha_consumo\030\006 \001(\t\"?" +
       "\n\022CrearCuentaRequest\022\022\n\nusuario_id\030\001 \001(\t" +
       "\022\025\n\rsaldo_inicial\030\002 \001(\001\"D\n\027ActualizarCue" +
       "ntaRequest\022\n\n\002id\030\001 \001(\t\022\r\n\005saldo\030\002 \001(\001\022\016\n" +
@@ -113,7 +113,7 @@ public final class CuentaOuterClass {
     internal_static_ConsumoProto_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ConsumoProto_descriptor,
-        new java.lang.String[] { "Id", "CuentaId", "Descripcion", "Monto", "FechaConsumo", "Estado", });
+        new java.lang.String[] { "Id", "CuentaId", "Descripcion", "Monto", "Estado", "FechaConsumo", });
     internal_static_CrearCuentaRequest_descriptor =
       getDescriptor().getMessageTypes().get(2);
     internal_static_CrearCuentaRequest_fieldAccessorTable = new
