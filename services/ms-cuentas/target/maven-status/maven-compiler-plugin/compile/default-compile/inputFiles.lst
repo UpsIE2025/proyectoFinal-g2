@@ -22,7 +22,6 @@
 /Users/pv/DEV/tests/proyectoFinal-g2/services/ms-cuentas/target/generated-sources/protobuf/java/edu/ups/ms_cuentas/proto/ListaConsumosResponse.java
 /Users/pv/DEV/tests/proyectoFinal-g2/services/ms-cuentas/src/main/java/edu/ups/ms_cuentas/models/entities/Consumo.java
 /Users/pv/DEV/tests/proyectoFinal-g2/services/ms-cuentas/target/generated-sources/protobuf/java/edu/ups/ms_cuentas/proto/ActualizarCuentaRequestOrBuilder.java
-/Users/pv/DEV/tests/proyectoFinal-g2/services/ms-cuentas/src/main/java/edu/ups/ms_cuentas/controllers/CuentaController.java
 /Users/pv/DEV/tests/proyectoFinal-g2/services/ms-cuentas/target/generated-sources/protobuf/java/edu/ups/ms_cuentas/proto/GetCuentaRequestOrBuilder.java
 /Users/pv/DEV/tests/proyectoFinal-g2/services/ms-cuentas/src/main/java/edu/ups/ms_cuentas/services/CuentaServiceImpl.java
 /Users/pv/DEV/tests/proyectoFinal-g2/services/ms-cuentas/src/main/java/edu/ups/ms_cuentas/services/CuentaGrpcServiceImpl.java

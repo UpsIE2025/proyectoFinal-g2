@@ -45,6 +45,9 @@ El compilador de protobuf (protoc) genera:
 - Las clases base del servicio gRPC
 - Los stubs del cliente
 
+Mandar el comando
+`./mvnw clean package`
+
 Luego, levantar los contenedores con:
 `docker-compose up -d --build`
 

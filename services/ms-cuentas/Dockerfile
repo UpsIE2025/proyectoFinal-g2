@@ -3,6 +3,7 @@ WORKDIR /app
 
 RUN apk add --no-cache bash
 COPY . .
+
 # RUN chmod +x mvnw
 # RUN ./mvnw clean generate-sources
 
