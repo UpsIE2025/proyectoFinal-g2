@@ -20,13 +20,13 @@ const CreateConsumptionScreen = ({ navigation }) => {
     setModalVisible(true);
   };
 
-  const handleGoBack = () => {
-    navigation.replace('Bienvenido'); 
-  };
-
   const handleConfirmConsumption = () => {
     setModalVisible(false);
     navigation.navigate('PayBill', { amount, consumptionType: selectedConsumption });
+  };
+
+  const handleGoBack = () => {
+    navigation.replace('Bienvenido'); 
   };
 
   const handleLogout = async () => {
