@@ -149,8 +149,6 @@ services:
     restart: always
     depends_on:
       - kafka
-    networks:
-      - integration-net
 
   # KONG API GATEWAY
   kong:
