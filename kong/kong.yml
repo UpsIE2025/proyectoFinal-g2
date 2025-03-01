@@ -1,9 +1,24 @@
 _format_version: "2.1"
+
 services:
   - name: graphql-service
-    url: http://graphql-server:4000
+    url: http://graphql-server:4000  # Kong forwards requests here
     routes:
       - name: graphql-route
         paths:
           - /graphql
-
+        strip_path: false
+        methods:
+          - POST
+          - GET
+        protocols:
+          - http
+          - https
+    plugins:
+      - name: cors
+        config:
+          origins: ["*"]
+          methods: ["POST", "GET"]
+          # headers: ["Authorization", "Content-Type"]
+          # credentials: true
+          headers: ["Content-Type"]

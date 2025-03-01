@@ -48,8 +48,10 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+        - services/micro-cdc/script/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - integration-net
+    restart: always
 
   ms-cuentas:
     build:
@@ -92,6 +94,7 @@ services:
   kafka-consumer:
     restart: always
     container_name: kafka-consumer
+   
     build:
       context: ./services/micro-cdc/kafka-consumer
       dockerfile: DockerFile
@@ -128,11 +131,25 @@ services:
     networks:
       - integration-net
 
+ # GraphQL Gateway
+  gateway-graphql:
+    build: ./services/gateway-graphql
+    container_name: gateway-graphql
+    ports:
+      - "4000:4000"
+    depends_on:
+      - ms-cuentas
+      - micro-estado-cuenta
+      # mas servicios
+    networks:
+      - integration-net 
+
   micro-estado-cuenta:
     build:
         context: ./services/micro-estado-cuenta
         dockerfile: Dockerfile
     container_name: micro-estado-cuenta
+    hostname: micro-estado-cuenta
     ports:
       - "26061:26061"
     depends_on:
@@ -140,10 +157,10 @@ services:
     networks:
       - integration-net
 
-  micro-estado-cuenta-notificacion:    
-    build: 
-        context: ./services/micro-estado-cuenta-notificacion
-        dockerfile: Dockerfile
+  micro-estado-cuenta-notificacion:
+    build:
+      context: ./services/micro-estado-cuenta-notificacion
+      dockerfile: Dockerfile
     container_name: micro-estado-cuenta-notificacion
     restart: always
     depends_on:
@@ -156,6 +173,7 @@ services:
     restart: always
     ports:
       - "8000:8000"   # Puerto de entradas proxy (HTTP)
+      - "8443:8443"   # Puerto de entradas proxy (HTTPS) si se configura
       - "8001:8001"   # Puerto Admin API (no exponer en prod)
     volumes:
       - ./kong/kong.yml:/usr/local/kong/declarative/kong.yml:ro
@@ -177,18 +195,15 @@ services:
       - "4000:4000"
     networks:
       - integration-net
-    depends_on:
-      - ms-cuentas
-      - kong
 
-  # # MICRO-AUTH (para conectar con Auth0)
-  # micro-auth:
-  #   build: ./services/micro-auth
-  #   container_name: micro-auth
-  #   ports:
-  #     - "3000:3000"
-  #   networks:
-  #     - integration-net
+  # MICRO-AUTH (para conectar con Auth0)
+  micro-auth:
+    build: ./services/micro-auth
+    container_name: micro-auth
+    ports:
+      - "3000:3000"
+    networks:
+      - integration-net
 
 networks:
   integration-net:
