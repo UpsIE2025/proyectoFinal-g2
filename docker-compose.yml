@@ -48,7 +48,7 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-        - services/micro-cdc/script/init.sql:/docker-entrypoint-initdb.d/init.sql
+        # - services/micro-cdc/script/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - integration-net
     restart: always
@@ -132,17 +132,17 @@ services:
       - integration-net
 
  # GraphQL Gateway
-  gateway-graphql:
-    build: ./services/gateway-graphql
-    container_name: gateway-graphql
-    ports:
-      - "4000:4000"
-    depends_on:
-      - ms-cuentas
-      - micro-estado-cuenta
-      # mas servicios
-    networks:
-      - integration-net 
+  # gateway-graphql:
+  #   build: ./services/gateway-graphql
+  #   container_name: gateway-graphql
+  #   ports:
+  #     - "4000:4000"
+  #   depends_on:
+  #     - ms-cuentas
+  #     - micro-estado-cuenta
+  #     # mas servicios
+  #   networks:
+  #     - integration-net 
 
   micro-estado-cuenta:
     build:
