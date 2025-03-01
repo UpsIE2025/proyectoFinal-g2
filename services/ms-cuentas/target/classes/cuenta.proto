@@ -18,8 +18,8 @@ message ConsumoProto {
     string cuenta_id = 2;
     string descripcion = 3;
     double monto = 4;
-    string fecha_consumo = 5;
-    string estado = 6;
+    string estado = 5;
+    string fecha_consumo = 6;
 }
 
 message CrearCuentaRequest {
