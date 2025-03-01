@@ -14,6 +14,10 @@ const CreateAccountScreen = ({ navigation }) => {
     setModalVisible(true);
   };
 
+  const handleGoBack = () => {
+    navigation.replace('Bienvenido'); 
+  };
+
   const confirmCreateAccount = () => {
     Alert.alert('Cuenta creada exitosamente');
     setBalance('');
@@ -32,6 +36,9 @@ const CreateAccountScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <LinearGradient colors={['#6200ee', '#8e24aa']} style={styles.header}>
+        <TouchableOpacity style={styles.backButton} onPress={handleGoBack}>
+          <Icon name="chevron-left" size={28} color="#fff" />
+        </TouchableOpacity>
         <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
           <Icon name="exit-to-app" size={28} color="#fff" />
         </TouchableOpacity>
@@ -238,6 +245,14 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  backButton: {
+    position: 'absolute',
+    top: 15,
+    left: 15,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    padding: 10,
+    borderRadius: 20,
   },
 });
 

@@ -37,7 +37,6 @@ const CreateConsumptionScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <LinearGradient colors={['#6200ee', '#8e24aa']} style={styles.header}>
-        {/* Botón de Logout */}
         <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
           <Icon name="exit-to-app" size={28} color="#fff" />
         </TouchableOpacity>
