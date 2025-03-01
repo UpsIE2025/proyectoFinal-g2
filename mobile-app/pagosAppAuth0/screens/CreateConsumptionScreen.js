@@ -15,6 +15,10 @@ const CreateConsumptionScreen = ({ navigation }) => {
     navigation.replace('SelectConsumptionScreen', { amount });
 
   };
+  const handleCreateAccount = () => {
+    navigation.replace('CreateAccount', { amount });
+
+  };
 
   const handlePayBill = () => {
     navigation.replace('PayBill', { amount });
@@ -46,7 +50,7 @@ const CreateConsumptionScreen = ({ navigation }) => {
       </LinearGradient>
 
       <View style={styles.actionContainer}>
-        <TouchableOpacity style={styles.actionButton}>
+        <TouchableOpacity style={styles.actionButton} onPress={handleCreateAccount}>
           <Icon name="receipt" size={40} color="#6200ee" />
           <Text style={styles.actionText}>Crear Cuenta</Text>
         </TouchableOpacity>
