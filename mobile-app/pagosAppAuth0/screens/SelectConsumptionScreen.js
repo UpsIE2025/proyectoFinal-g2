@@ -25,9 +25,28 @@ const CreateConsumptionScreen = ({ navigation }) => {
     navigation.navigate('PayBill', { amount, consumptionType: selectedConsumption });
   };
 
+  const handleGoBack = () => {
+    navigation.replace('Bienvenido'); 
+  };
+
+  const handleLogout = async () => {
+    try {
+      await clearSession();
+      navigation.replace('Home');
+    } catch (e) {
+      console.log('Log out cancelado');
+    }
+  };
+
   return (
     <View style={styles.container}>
       <LinearGradient colors={['#6200ee', '#8e24aa']} style={styles.header}>
+        <TouchableOpacity style={styles.backButton} onPress={handleGoBack}>
+          <Icon name="chevron-left" size={28} color="#fff" />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+          <Icon name="exit-to-app" size={28} color="#fff" />
+        </TouchableOpacity>
         <Image source={userLogo} style={styles.userLogo} />
         <Text style={styles.accountName}>Juan Pérez</Text>
         <Text style={styles.accountDetail}>Número de cuenta: 123456789</Text>
@@ -203,6 +222,22 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 12,
   },
+  backButton: {
+    position: 'absolute',
+    top: 15,
+    left: 15,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    padding: 10,
+    borderRadius: 20,
+  },
+  logoutButton: {
+    position: 'absolute',
+    top: 15,
+    right: 15,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    padding: 10,
+    borderRadius: 20,
+  }
 });
 
 export default CreateConsumptionScreen;

@@ -9,6 +9,8 @@ import config from './auth0-configuration';
 import CreateConsumptionScreen from './screens/CreateConsumptionScreen';
 import PayBillScreen from './screens/PayBillScreen';
 import SelectConsumptionScreen from './screens/SelectConsumptionScreen';
+import CreateAccountScreen from './screens/CreateAccountScreen';
+import ListAccountsScreen from './screens/ListAccountsScreen';
 
 const Stack = createStackNavigator();
 
@@ -91,6 +93,8 @@ const AppNavigator = () => (
       <Stack.Screen name="Bienvenido" component={CreateConsumptionScreen} />
       <Stack.Screen name="SelectConsumptionScreen" component={SelectConsumptionScreen} />
       <Stack.Screen name="PayBill" component={PayBillScreen} />
+      <Stack.Screen name="CreateAccount" component={CreateAccountScreen} />
+      <Stack.Screen name="ListAccounts" component={ListAccountsScreen} />
     </Stack.Navigator>
   </NavigationContainer>
 );
