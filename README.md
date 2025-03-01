@@ -25,7 +25,7 @@ Sistema distribuido basado en microservicios para la gestión de cuentas bancari
 ## Arquitectura
 
 ### Frontend
-- **Mobile App**: Aplicación móvil que consume la API GraphQL pasando por Kong API Gateway
+- **Mobile App**: Aplicación móvil desarrollada con React Native y Expo. Realiza la comunicación a backend con la lbreia apollo-client y apunta hacia el api gateway Kong usando grahpl
 
 ### API Gateway y GraphQL
 - **Kong API Gateway**: 
@@ -51,19 +51,22 @@ Sistema distribuido basado en microservicios para la gestión de cuentas bancari
 ### Microservicios
 
 #### Servicio de Cuentas (ms-cuentas)
-- Implementa gRPC para comunicación
+- Implementa gRPC api para comunicación
 - Puerto: 9090
 - Gestiona operaciones CRUD de cuentas
+- Gestiona operaciones CRUD de cuentas
+- Desarrollado con Java y Spring Boot
 - Utiliza PostgreSQL como base de datos
 
-#### Servicio de Estado de Cuenta
+#### Servicio de Estado de Cuenta (Producer)
+- Implementa Rest api para su comsumo
 - Puerto: 26061
-- Genera estados de cuenta
-- Publica eventos en Kafka
+- Recibe la solicitud de generación de estados de cuenta y la publica en Kafka
+- Desarrollado con Node js
 
-#### Servicio de Notificaciones
-- Consume eventos de Kafka
-- Podría usarse para enviar notificaciones usando por ejemplo Firebase
+#### Servicio de Estado de Cuenta Noificacion (Resolver)
+- Consumer de la solicitud de generación de estados de cuenta a través de un tópico de Kafka
+- Desarrollado con Node js
 
 ### Bases de Datos
 - **PostgreSQL**:
@@ -94,7 +97,10 @@ Sistema distribuido basado en microservicios para la gestión de cuentas bancari
   - Versión: 1.7
   - Puerto: 8083
   - Captura cambios en PostgreSQL
-  - Replica datos a MariaDB
+  - Publica los cambios de base de datos en kafka
+- **Kafka Consumer**:
+  - Consumer de los mensajes publicados en kafa que contienen los cambios de la base de datos Postgres
+  - Desarrollado con Node js
 
 ## Configuración y Despliegue
 
