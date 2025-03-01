@@ -32,7 +32,10 @@ const Home = ({ navigation }) => {
 
   const onLogin = async () => {
     try {
-      await authorize();
+      await authorize({
+        audience: 'https://dev-88x6n0ntfccbwhfp.us.auth0.com/api/v2/',  // Agregar esta línea
+        scope: 'openid profile email',
+      });
       let creds = await getCredentials();
       setCredentials(creds);
       Alert.alert('AccessToken: ' + creds.accessToken);

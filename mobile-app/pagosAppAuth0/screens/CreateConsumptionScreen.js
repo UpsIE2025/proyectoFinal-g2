@@ -46,21 +46,21 @@ const CreateConsumptionScreen = ({ navigation }) => {
       </LinearGradient>
 
       <View style={styles.actionContainer}>
+        <TouchableOpacity style={styles.actionButton}>
+          <Icon name="receipt" size={40} color="#6200ee" />
+          <Text style={styles.actionText}>Crear Cuenta</Text>
+        </TouchableOpacity>
         <TouchableOpacity style={styles.actionButton} onPress={handleCreateConsumption}>
           <Icon name="shopping-cart" size={40} color="#6200ee" />
           <Text style={styles.actionText}>Crear Consumo</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.actionButton}>
-          <Icon name="receipt" size={40} color="#6200ee" />
-          <Text style={styles.actionText}>Solicitar Estado</Text>
-        </TouchableOpacity>
         <TouchableOpacity style={styles.actionButton} onPress={handlePayBill}>
           <Icon name="credit-card" size={40} color="#6200ee" />
-          <Text style={styles.actionText}>Pagar Cuenta</Text>
+          <Text style={styles.actionText}>Listar Cuentas</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.actionButton}>
           <Icon name="history" size={40} color="#6200ee" />
-          <Text style={styles.actionText}>Historial</Text>
+          <Text style={styles.actionText}>Listar Consumos</Text>
         </TouchableOpacity>
       </View>
 
